@@ -1,15 +1,13 @@
 import {
   GET_ALL_HAMA_PENYAKIT,
-  GET_ONE_HAMA_PENYAKIT,
   ERROR_HAMA_PENYAKIT,
   SET_KEYWORD,
   SET_PAGE,
 } from "./types";
-import { getAll, getOne } from "../../services/hama-penyakit";
+import { getAll } from "../../services/hama-penyakit";
 import debounce from "debounce-promise";
 
 const debouncedGetAll = debounce(getAll, 1000);
-const debouncedGetOne = debounce(getOne, 1000);
 
 const setKeyword = (keyword) => {
   return {
@@ -63,21 +61,4 @@ const fetchAllHamaPenyakit = () => {
   };
 };
 
-const fetchOneHamaPenyakit = (id) => {
-  return async (dispatch) => {
-    const response = await debouncedGetOne(id);
-    if (response?.data?.statusCode === 200) {
-      dispatch({
-        type: GET_ONE_HAMA_PENYAKIT,
-        oneData: response?.data?.data,
-      });
-    } else {
-      dispatch({
-        type: ERROR_HAMA_PENYAKIT,
-        error: response,
-      });
-    }
-  };
-};
-
-export { fetchAllHamaPenyakit, fetchOneHamaPenyakit, setKeyword, setPage };
+export { fetchAllHamaPenyakit, setKeyword, setPage };

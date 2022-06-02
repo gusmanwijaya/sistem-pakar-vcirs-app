@@ -1,6 +1,5 @@
 import {
   GET_ALL_HAMA_PENYAKIT,
-  GET_ONE_HAMA_PENYAKIT,
   ERROR_HAMA_PENYAKIT,
   SET_KEYWORD,
   SET_PAGE,
@@ -12,7 +11,6 @@ const initialState = {
   limit: 10,
   total_page: 1,
   allData: [],
-  oneData: {},
   error: {},
 };
 
@@ -23,12 +21,6 @@ const reducers = (state = initialState, action) => {
         ...state,
         allData: action.allData,
         total_page: action.total_page,
-      };
-
-    case GET_ONE_HAMA_PENYAKIT:
-      return {
-        ...state,
-        oneData: action.oneData,
       };
 
     case ERROR_HAMA_PENYAKIT:

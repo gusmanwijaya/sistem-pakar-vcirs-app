@@ -8,9 +8,9 @@ export async function getAll(keyword, page, limit) {
   return CallApi({ url, method: "GET", token: true });
 }
 
-export async function getOne(id) {
+export async function getOne(id, token) {
   const url = `${ROOT_API}/${API}/hama-penyakit/get-one/${id}`;
-  return CallApi({ url, method: "GET", token: true });
+  return CallApi({ url, method: "GET", serverToken: token });
 }
 
 export async function update(id, data) {

@@ -13,6 +13,8 @@ const LayoutTable = ({
   page,
   handlePrevious,
   handleNext,
+  disabledPrevious,
+  disabledNext,
 }) => {
   const router = useRouter();
 
@@ -91,6 +93,8 @@ const LayoutTable = ({
             page={page}
             handlePrevious={() => handlePrevious()}
             handleNext={() => handleNext()}
+            disabledPrevious={disabledPrevious}
+            disabledNext={disabledNext}
           />
         )}
       </div>

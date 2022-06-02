@@ -1721,6 +1721,11 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-18.1.0.tgz"
   "version" "18.1.0"
 
+"react-multi-select-component@^4.2.7":
+  "integrity" "sha512-RIIyKvBvFOgyBqmVnAGcIPYePg0dBc48nzUhOtVuYp1MLQ7UfiarXPTvkm4PD2J8IvOMSPjI1+YIWK95iE4Cvw=="
+  "resolved" "https://registry.npmjs.org/react-multi-select-component/-/react-multi-select-component-4.2.7.tgz"
+  "version" "4.2.7"
+
 "react-redux@^8.0.2":
   "integrity" "sha512-nBwiscMw3NoP59NFCXFf02f8xdo+vSHT/uZ1ldDwF7XaTpzm+Phk97VT4urYBl5TYAPNVaFm12UHAEyzkpNzRA=="
   "resolved" "https://registry.npmjs.org/react-redux/-/react-redux-8.0.2.tgz"

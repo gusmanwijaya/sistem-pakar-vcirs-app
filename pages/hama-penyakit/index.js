@@ -57,9 +57,26 @@ const HamaPenyakit = () => {
         page={page}
         handlePrevious={handlePrevious}
         handleNext={handleNext}
+        disabledPrevious={page <= 1 ? true : false}
+        disabledNext={page === total_page ? true : false}
       />
     </Content>
   );
 };
 
 export default HamaPenyakit;
+
+export async function getServerSideProps({ req }) {
+  const { token } = req.cookies;
+  if (!token)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {},
+  };
+}
