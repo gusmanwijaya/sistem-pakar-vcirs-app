@@ -6,11 +6,11 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { getForSelect as getForSelectGejala } from "../../../services/gejala";
 import { getForSelect as getForSelectSolusi } from "../../../services/solusi";
-import { create, getOne } from "../../../services/hama-penyakit";
+import { update, getOne } from "../../../services/hama-penyakit";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-const Ubah = ({ dataGejala, dataSolusi, oneData }) => {
+const Ubah = ({ dataGejala, dataSolusi, oneData, params }) => {
   const router = useRouter();
   const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
   const directory = "hama-penyakit";
@@ -50,15 +50,8 @@ const Ubah = ({ dataGejala, dataSolusi, oneData }) => {
 
   useEffect(() => {
     if (Object.keys(oneData).length > 0) {
-      setForm({
-        ...form,
-        kode: oneData?.kode || "",
-        nama: oneData?.nama || "",
-        imagePreview:
-          oneData?.foto && oneData?.foto !== ""
-            ? `${API_IMAGE}/${directory}/${oneData?.foto}`
-            : "",
-      });
+      let _tempIdGej = [];
+      let _tempIdSol = [];
 
       let _idGejala = [];
       oneData.gejala.forEach((_idGej) => {
@@ -81,6 +74,10 @@ const Ubah = ({ dataGejala, dataSolusi, oneData }) => {
 
         if (updateForShowValueGejala.length > 0) {
           setShowValueGejala(updateForShowValueGejala);
+
+          updateForShowValueGejala.forEach((idGej) => {
+            _tempIdGej.push(idGej?.value);
+          });
         }
       }
 
@@ -104,8 +101,23 @@ const Ubah = ({ dataGejala, dataSolusi, oneData }) => {
 
         if (updateForShowValueSolusi.length > 0) {
           setShowValueSolusi(updateForShowValueSolusi);
+          updateForShowValueSolusi.forEach((idSol) => {
+            _tempIdSol.push(idSol?.value);
+          });
         }
       }
+
+      setForm({
+        ...form,
+        kode: oneData?.kode || "",
+        nama: oneData?.nama || "",
+        gejala: _tempIdGej,
+        solusi: _tempIdSol,
+        imagePreview:
+          oneData?.foto && oneData?.foto !== ""
+            ? `${API_IMAGE}/${directory}/${oneData?.foto}`
+            : "",
+      });
     }
   }, []);
 
@@ -157,13 +169,13 @@ const Ubah = ({ dataGejala, dataSolusi, oneData }) => {
     formData.append("gejala", JSON.stringify(form.gejala));
     formData.append("solusi", JSON.stringify(form.solusi));
 
-    const response = await create(formData);
-    if (response?.data?.statusCode === 201) {
+    const response = await update(params?.id, formData);
+    if (response?.data?.statusCode === 200) {
       router.push("/hama-penyakit");
       Swal.fire({
         icon: "success",
         title: "Sukses",
-        text: `${response?.data?.message || "Berhasil menambahkan data!"}`,
+        text: `${response?.data?.message || "Berhasil mengubah data!"}`,
       });
     } else {
       Swal.fire({
@@ -314,6 +326,7 @@ export async function getServerSideProps({ req, params }) {
       dataGejala: responseGejala?.data?.data || [],
       dataSolusi: responseSolusi?.data?.data || [],
       oneData: responseOneData?.data?.data || {},
+      params,
     },
   };
 }
