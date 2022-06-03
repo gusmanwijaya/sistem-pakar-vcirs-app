@@ -16,7 +16,6 @@ export default function Register() {
 
   const handleRegister = async () => {
     const response = await register(form);
-    console.log(response);
     if (response?.data?.statusCode === 201) {
       router.push("/");
       Swal.fire({

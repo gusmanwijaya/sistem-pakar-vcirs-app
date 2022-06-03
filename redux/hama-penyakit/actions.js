@@ -7,7 +7,7 @@ import {
 import { getAll } from "../../services/hama-penyakit";
 import debounce from "debounce-promise";
 
-const debouncedGetAll = debounce(getAll, 1000);
+const debouncedGetAll = debounce(getAll, 300);
 
 const setKeyword = (keyword) => {
   return {

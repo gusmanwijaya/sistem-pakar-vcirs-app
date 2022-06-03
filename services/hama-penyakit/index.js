@@ -13,6 +13,11 @@ export async function getOne(id, token) {
   return CallApi({ url, method: "GET", serverToken: token });
 }
 
+export async function create(data) {
+  const url = `${ROOT_API}/${API}/hama-penyakit/create`;
+  return CallApi({ url, method: "POST", token: true, data });
+}
+
 export async function update(id, data) {
   const url = `${ROOT_API}/${API}/hama-penyakit/update/${id}`;
   return CallApi({ url, method: "PUT", token: true, data });

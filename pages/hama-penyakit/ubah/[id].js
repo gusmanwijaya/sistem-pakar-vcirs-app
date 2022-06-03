@@ -1,15 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
-import Content from "../../components/Content";
+import Content from "../../../components/Content";
 import { MultiSelect } from "react-multi-select-component";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { getForSelect as getForSelectGejala } from "../../services/gejala";
-import { getForSelect as getForSelectSolusi } from "../../services/solusi";
-import { create } from "../../services/hama-penyakit";
+import { getForSelect as getForSelectGejala } from "../../../services/gejala";
+import { getForSelect as getForSelectSolusi } from "../../../services/solusi";
+import { create, getOne } from "../../../services/hama-penyakit";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-const Tambah = ({ dataGejala, dataSolusi }) => {
+const Ubah = ({ dataGejala, dataSolusi, oneData }) => {
   const router = useRouter();
+  const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
+  const directory = "hama-penyakit";
 
   let _tempForOptionsGejala = [];
   dataGejala.forEach((element) => {
@@ -43,6 +47,67 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
   });
   const [showValueGejala, setShowValueGejala] = useState([]);
   const [showValueSolusi, setShowValueSolusi] = useState([]);
+
+  useEffect(() => {
+    if (Object.keys(oneData).length > 0) {
+      setForm({
+        ...form,
+        kode: oneData?.kode || "",
+        nama: oneData?.nama || "",
+        imagePreview:
+          oneData?.foto && oneData?.foto !== ""
+            ? `${API_IMAGE}/${directory}/${oneData?.foto}`
+            : "",
+      });
+
+      let _idGejala = [];
+      oneData.gejala.forEach((_idGej) => {
+        _idGejala.push(_idGej?._id);
+      });
+
+      if (_idGejala.length > 0) {
+        let updateForShowValueGejala = [];
+        optionsGejala.forEach((element) => {
+          _idGejala.forEach((result) => {
+            if (element?.value === result) {
+              updateForShowValueGejala.push({
+                noKode: element?.noKode,
+                label: element?.label,
+                value: element?.value,
+              });
+            }
+          });
+        });
+
+        if (updateForShowValueGejala.length > 0) {
+          setShowValueGejala(updateForShowValueGejala);
+        }
+      }
+
+      let _idSolusi = [];
+      oneData.solusi.forEach((_idSol) => {
+        _idSolusi.push(_idSol?._id);
+      });
+
+      if (_idSolusi.length > 0) {
+        let updateForShowValueSolusi = [];
+        optionsSolusi.forEach((element) => {
+          _idSolusi.forEach((result) => {
+            if (element?.value === result) {
+              updateForShowValueSolusi.push({
+                label: element?.label,
+                value: element?.value,
+              });
+            }
+          });
+        });
+
+        if (updateForShowValueSolusi.length > 0) {
+          setShowValueSolusi(updateForShowValueSolusi);
+        }
+      }
+    }
+  }, []);
 
   const handleMultipleSelectGejala = (data) => {
     setShowValueGejala(data);
@@ -84,7 +149,7 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
     }
   };
 
-  const handleTambah = async () => {
+  const handleUbah = async () => {
     let formData = new FormData();
     formData.append("kode", form.kode);
     formData.append("nama", form.nama);
@@ -110,7 +175,7 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
   };
 
   return (
-    <Content title="Tambah Hama/Penyakit">
+    <Content title="Ubah Hama/Penyakit">
       <div className="max-w-2xl mx-auto">
         <div className="relative z-0 mb-6 w-full group">
           <label
@@ -125,6 +190,7 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
             className="input input-bordered w-full"
             required
             onChange={(event) => setForm({ ...form, kode: event.target.value })}
+            value={form?.kode}
           />
         </div>
         <div className="relative z-0 mb-6 w-full group">
@@ -140,6 +206,7 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
             className="input input-bordered w-full"
             required
             onChange={(event) => setForm({ ...form, nama: event.target.value })}
+            value={form?.nama}
           />
         </div>
         <div className="relative mb-6 w-full group">
@@ -215,19 +282,19 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
         </div>
         <button
           type="button"
-          onClick={handleTambah}
+          onClick={handleUbah}
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Tambah
+          Ubah
         </button>
       </div>
     </Content>
   );
 };
 
-export default Tambah;
+export default Ubah;
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, params }) {
   const { token } = req.cookies;
   if (!token)
     return {
@@ -240,10 +307,13 @@ export async function getServerSideProps({ req }) {
   const responseGejala = await getForSelectGejala(token);
   const responseSolusi = await getForSelectSolusi(token);
 
+  const responseOneData = await getOne(params?.id, token);
+
   return {
     props: {
       dataGejala: responseGejala?.data?.data || [],
       dataSolusi: responseSolusi?.data?.data || [],
+      oneData: responseOneData?.data?.data || {},
     },
   };
 }

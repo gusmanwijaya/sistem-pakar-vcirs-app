@@ -8,6 +8,7 @@ import {
   setPage,
 } from "../../redux/hama-penyakit/actions";
 import Swal from "sweetalert2";
+import { destroy } from "../../services/hama-penyakit";
 
 const HamaPenyakit = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,23 @@ const HamaPenyakit = () => {
       cancelButtonText: "Batal",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(id);
+        const response = await destroy(id);
+        if (response?.data?.statusCode === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Sukses",
+            text: `${response?.data?.message || "Berhasil menghapus data!"}`,
+          });
+          dispatch(fetchAllHamaPenyakit());
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: `${
+              response?.data?.message || "Nampaknya terjadi kesalahan!"
+            }`,
+          });
+        }
       }
     });
   };

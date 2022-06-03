@@ -1,8 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 import Content from "../../../components/Content";
 import Link from "next/link";
 import { getOne } from "../../../services/hama-penyakit";
 
 const Detail = ({ oneData }) => {
+  const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
+  const directory = "hama-penyakit";
+
   return (
     <Content title="Detail Hama/Penyakit">
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -32,6 +36,18 @@ const Detail = ({ oneData }) => {
         </div>
         <div className="border-t border-gray-200">
           <dl>
+            {oneData?.foto && oneData?.foto !== "" && (
+              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Foto</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <img
+                    src={`${API_IMAGE}/${directory}/${oneData?.foto}`}
+                    alt="Foto"
+                    className="w-1/2 h-full object-cover"
+                  />
+                </dd>
+              </div>
+            )}
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Kode</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
