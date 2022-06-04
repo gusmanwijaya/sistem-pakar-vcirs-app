@@ -126,6 +126,7 @@ const Ubah = ({ oneData, params }) => {
           </label>
           <input
             type="number"
+            min={0}
             name="credit"
             className="input input-bordered w-full"
             required
@@ -144,6 +145,7 @@ const Ubah = ({ oneData, params }) => {
           </label>
           <input
             type="number"
+            min={0}
             name="numOfNode"
             className="input input-bordered w-full"
             required

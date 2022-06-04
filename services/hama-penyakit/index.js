@@ -3,6 +3,11 @@ import CallApi from "../../configs/api";
 const ROOT_API = process.env.NEXT_PUBLIC_API;
 const API = "api/v1";
 
+export async function getForSelect(token) {
+  const url = `${ROOT_API}/${API}/hama-penyakit/get-for-select`;
+  return CallApi({ url, method: "GET", serverToken: token });
+}
+
 export async function getAll(keyword, page, limit) {
   const url = `${ROOT_API}/${API}/hama-penyakit/get-all?keyword=${keyword}&page=${page}&limit=${limit}`;
   return CallApi({ url, method: "GET", token: true });

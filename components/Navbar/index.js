@@ -41,7 +41,7 @@ export default function Navbar() {
                 <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
               </svg>
             </button>
-            <ul className="p-2 bg-base-100 text-gray-600 z-10">
+            <ul className="p-2 bg-base-100 text-gray-600 z-20">
               <li>
                 <Link href="/hama-penyakit">
                   <button className="btn btn-ghost capitalize">

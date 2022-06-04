@@ -102,6 +102,7 @@ const Tambah = () => {
           </label>
           <input
             type="number"
+            min={0}
             name="numOfNode"
             className="input input-bordered w-full"
             required
