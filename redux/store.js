@@ -4,11 +4,13 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
 
 import hamaPenyakitReducers from "./hama-penyakit/reducers";
+import gejalaReducers from "./gejala/reducers";
 
 let store;
 
 const reducers = combineReducers({
   hamaPenyakitReducers,
+  gejalaReducers,
 });
 
 function initStore(initialState) {

@@ -47,11 +47,18 @@ const LayoutTable = ({
                     <tr key={index}>
                       {Object.keys(value).map(
                         (key) =>
-                          tbody.indexOf(key) > -1 && (
+                          tbody.indexOf(key) > -1 &&
+                          (key === "deskripsi" ? (
+                            <td key={key}>
+                              {value[key].length > 110
+                                ? `${value[key].slice(0, 110)}...`
+                                : value[key]}
+                            </td>
+                          ) : (
                             <td key={key} className="w-1/6">
                               {value[key]}
                             </td>
-                          )
+                          ))
                       )}
                       <th className="w-1/12">
                         <div className="flex flex-row justify-center items-center space-x-1">
