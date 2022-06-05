@@ -44,4 +44,22 @@ const fetchAllPertanyaan = () => {
   };
 };
 
-export { fetchAllPertanyaan, setPage };
+const fetchPertanyaanDiagnosa = () => {
+  return async (dispatch, getState) => {
+    const params = {
+      page: getState().pertanyaanReducers?.page || 1,
+      limitDiagnosa: getState().pertanyaanReducers?.limitDiagnosa || 1,
+    };
+
+    const response = await debouncedGetAll(params?.page, params?.limitDiagnosa);
+    if (response?.data?.statusCode === 200) {
+      dispatch(
+        setGetAllPertanyaan(response?.data?.data, response?.data?.total_page)
+      );
+    } else {
+      dispatch(setErrorPertanyaan(response));
+    }
+  };
+};
+
+export { fetchAllPertanyaan, setPage, fetchPertanyaanDiagnosa };

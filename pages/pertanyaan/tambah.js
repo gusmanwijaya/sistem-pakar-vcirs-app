@@ -4,12 +4,14 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { create } from "../../services/pertanyaan";
 import { useRouter } from "next/router";
+import { getForSelect } from "../../services/gejala";
 
-const Tambah = () => {
+const Tambah = ({ dataGejala }) => {
   const router = useRouter();
 
   const [form, setForm] = useState({
     pertanyaan: "",
+    gejala: "",
   });
 
   const handleTambah = async () => {
@@ -50,6 +52,29 @@ const Tambah = () => {
             }
           />
         </div>
+        <div className="relative z-0 mb-6 w-full group">
+          <label
+            htmlFor="gejala"
+            className="block text-sm font-medium text-gray-400 mb-2"
+          >
+            Gejala
+          </label>
+          <select
+            name="gejala"
+            className="select select-bordered w-full"
+            onChange={(event) =>
+              setForm({ ...form, gejala: event.target.value })
+            }
+          >
+            <option value=""></option>
+            {dataGejala.length > 0 &&
+              dataGejala.map((value, index) => (
+                <option key={index} value={value?._id}>
+                  {value?.deskripsi}
+                </option>
+              ))}
+          </select>
+        </div>
         <button
           type="button"
           onClick={handleTambah}
@@ -74,7 +99,11 @@ export async function getServerSideProps({ req }) {
       },
     };
 
+  const responseGejala = await getForSelect(token);
+
   return {
-    props: {},
+    props: {
+      dataGejala: responseGejala?.data?.data || [],
+    },
   };
 }

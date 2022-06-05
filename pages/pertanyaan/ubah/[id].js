@@ -6,12 +6,14 @@ import Swal from "sweetalert2";
 import { update, getOne } from "../../../services/pertanyaan";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { getForSelect } from "../../../services/gejala";
 
-const Ubah = ({ oneData, params }) => {
+const Ubah = ({ oneData, params, dataGejala }) => {
   const router = useRouter();
 
   const [form, setForm] = useState({
     pertanyaan: "",
+    gejala: "",
   });
 
   useEffect(() => {
@@ -19,6 +21,7 @@ const Ubah = ({ oneData, params }) => {
       setForm({
         ...form,
         pertanyaan: oneData?.pertanyaan || "",
+        gejala: oneData?.gejala?._id || "",
       });
     }
   }, []);
@@ -62,6 +65,35 @@ const Ubah = ({ oneData, params }) => {
             value={form?.pertanyaan}
           />
         </div>
+        <div className="relative z-0 mb-6 w-full group">
+          <label
+            htmlFor="gejala"
+            className="block text-sm font-medium text-gray-400 mb-2"
+          >
+            Gejala
+          </label>
+          <select
+            name="gejala"
+            className="select select-bordered w-full"
+            onChange={(event) =>
+              setForm({ ...form, gejala: event.target.value })
+            }
+          >
+            <option value=""></option>
+            {dataGejala.length > 0 &&
+              dataGejala.map((value, index) =>
+                value?._id === oneData?.gejala?._id ? (
+                  <option key={index} value={value?._id} selected>
+                    {value?.deskripsi}
+                  </option>
+                ) : (
+                  <option key={index} value={value?._id}>
+                    {value?.deskripsi}
+                  </option>
+                )
+              )}
+          </select>
+        </div>
         <button
           type="button"
           onClick={handleUbah}
@@ -87,10 +119,12 @@ export async function getServerSideProps({ req, params }) {
     };
 
   const responseOneData = await getOne(params?.id, token);
+  const responseGejala = await getForSelect(token);
 
   return {
     props: {
       oneData: responseOneData?.data?.data || {},
+      dataGejala: responseGejala?.data?.data || [],
       params,
     },
   };

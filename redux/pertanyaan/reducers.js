@@ -3,6 +3,7 @@ import { GET_ALL_PERTANYAAN, ERROR_PERTANYAAN, SET_PAGE } from "./types";
 const initialState = {
   page: 1,
   limit: 10,
+  limitDiagnosa: 1,
   total_page: 1,
   allData: [],
   error: {},
