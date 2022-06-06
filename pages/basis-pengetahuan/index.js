@@ -9,6 +9,7 @@ import {
 import Swal from "sweetalert2";
 import { destroy } from "../../services/basis-pengetahuan";
 import { useRouter } from "next/router";
+import jwtDecode from "jwt-decode";
 
 const BasisPengetahuan = () => {
   const router = useRouter();
@@ -174,6 +175,16 @@ export async function getServerSideProps({ req }) {
         permanent: false,
       },
     };
+
+  const user = jwtDecode(token);
+  if (user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {},

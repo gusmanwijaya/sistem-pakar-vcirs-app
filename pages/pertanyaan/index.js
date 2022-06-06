@@ -6,6 +6,7 @@ import LayoutTable from "../../components/LayoutTable";
 import { fetchAllPertanyaan, setPage } from "../../redux/pertanyaan/actions";
 import Swal from "sweetalert2";
 import { destroy } from "../../services/pertanyaan";
+import jwtDecode from "jwt-decode";
 
 const Pertanyaan = () => {
   const dispatch = useDispatch();
@@ -89,6 +90,16 @@ export async function getServerSideProps({ req }) {
         permanent: false,
       },
     };
+
+  const user = jwtDecode(token);
+  if (user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {},

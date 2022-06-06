@@ -2,6 +2,7 @@
 import Content from "../../../components/Content";
 import Link from "next/link";
 import { getOne } from "../../../services/basis-pengetahuan";
+import jwtDecode from "jwt-decode";
 
 const Detail = ({ oneData }) => {
   return (
@@ -71,6 +72,16 @@ export async function getServerSideProps({ req, params }) {
         permanent: false,
       },
     };
+
+  const user = jwtDecode(token);
+  if (user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
 
   const response = await getOne(params?.id, token);
 

@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { update, getOne } from "../../../services/solusi";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import jwtDecode from "jwt-decode";
 
 const Ubah = ({ oneData, params }) => {
   const router = useRouter();
@@ -85,6 +86,16 @@ export async function getServerSideProps({ req, params }) {
         permanent: false,
       },
     };
+
+  const user = jwtDecode(token);
+  if (user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
 
   const responseOneData = await getOne(params?.id, token);
 

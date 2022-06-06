@@ -4,6 +4,7 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { create } from "../../services/solusi";
 import { useRouter } from "next/router";
+import jwtDecode from "jwt-decode";
 
 const Tambah = () => {
   const router = useRouter();
@@ -73,6 +74,16 @@ export async function getServerSideProps({ req }) {
         permanent: false,
       },
     };
+
+  const user = jwtDecode(token);
+  if (user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {},

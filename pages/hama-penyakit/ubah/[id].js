@@ -9,6 +9,7 @@ import { getForSelect as getForSelectSolusi } from "../../../services/solusi";
 import { update, getOne } from "../../../services/hama-penyakit";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import jwtDecode from "jwt-decode";
 
 const Ubah = ({ dataGejala, dataSolusi, oneData, params }) => {
   const router = useRouter();
@@ -315,6 +316,16 @@ export async function getServerSideProps({ req, params }) {
         permanent: false,
       },
     };
+
+  const user = jwtDecode(token);
+  if (user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
 
   const responseGejala = await getForSelectGejala(token);
   const responseSolusi = await getForSelectSolusi(token);

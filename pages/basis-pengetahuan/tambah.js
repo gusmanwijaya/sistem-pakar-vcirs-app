@@ -6,6 +6,7 @@ import { create } from "../../services/basis-pengetahuan";
 import { getForSelect as getForSelectHamaPenyakit } from "../../services/hama-penyakit";
 import { getForSelect as getForSelectGejala } from "../../services/gejala";
 import { useRouter } from "next/router";
+import jwtDecode from "jwt-decode";
 
 const Tambah = ({ dataHamaPenyakit, dataGejala }) => {
   const router = useRouter();
@@ -123,6 +124,16 @@ export async function getServerSideProps({ req }) {
         permanent: false,
       },
     };
+
+  const user = jwtDecode(token);
+  if (user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
 
   const responseHamaPenyakit = await getForSelectHamaPenyakit(token);
   const responseGejala = await getForSelectGejala(token);

@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { create } from "../../services/pertanyaan";
 import { useRouter } from "next/router";
 import { getForSelect } from "../../services/gejala";
+import jwtDecode from "jwt-decode";
 
 const Tambah = ({ dataGejala }) => {
   const router = useRouter();
@@ -98,6 +99,16 @@ export async function getServerSideProps({ req }) {
         permanent: false,
       },
     };
+
+  const user = jwtDecode(token);
+  if (user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
 
   const responseGejala = await getForSelect(token);
 
