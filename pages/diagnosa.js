@@ -1,10 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Content from "../components/Content";
 import { fetchPertanyaanDiagnosa, setPage } from "../redux/pertanyaan/actions";
+import { createDiagnosa } from "../redux/diagnosa/actions";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 const Diagnosa = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const { allData, page, total_page } = useSelector(
     (state) => state.pertanyaanReducers
@@ -12,18 +17,21 @@ const Diagnosa = () => {
 
   const [radio, setRadio] = useState("");
   const [form, setForm] = useState({
-    urutanAnswer: [],
-    idGejala: [],
-    nilaiAnswer: [],
+    urutanAnswer: "",
+    idGejala: "",
+    nilaiAnswer: "",
   });
-  let _temp = [];
 
   const handlePrevious = () => {
     dispatch(setPage(page <= 1 ? 1 : page - 1));
+    setRadio("");
   };
 
   const handleNext = () => {
     dispatch(setPage(page === total_page ? total_page : page + 1));
+    if (page !== total_page) {
+      setRadio("");
+    }
   };
 
   const handleRadio = (event) => {
@@ -32,24 +40,83 @@ const Diagnosa = () => {
 
   const handleSimpan = () => {
     if (radio !== "") {
-      allData.forEach((element) => {
-        _temp.push({
-          urutanAnswer: _temp.length === 0 ? 1 : _temp.length + 1,
-          idGejala: element?.gejala?._id || "",
+      let payload = {};
+      for (const oneData of allData) {
+        payload = {
+          urutanAnswer: localStorage.length === 0 ? 1 : localStorage.length + 1,
+          idGejala: oneData?.gejala?._id || "",
           nilaiAnswer: parseFloat(radio) || "",
-        });
+        };
+      }
+
+      localStorage.setItem(
+        `answer-${localStorage.length === 0 ? 1 : localStorage.length + 1}`,
+        JSON.stringify(payload)
+      );
+    }
+
+    let _tempUrutanAnswer = [];
+    let _tempIdGejala = [];
+    let _tempNilaiAnswer = [];
+
+    for (let index = 1; index <= localStorage.length; index++) {
+      _tempUrutanAnswer.push(
+        JSON.parse(localStorage.getItem(`answer-${index}`))["urutanAnswer"]
+      );
+      _tempIdGejala.push(
+        JSON.parse(localStorage.getItem(`answer-${index}`))["idGejala"]
+      );
+      _tempNilaiAnswer.push(
+        JSON.parse(localStorage.getItem(`answer-${index}`))["nilaiAnswer"]
+      );
+    }
+
+    setForm({
+      ...form,
+      urutanAnswer:
+        _tempUrutanAnswer.length > 0 ? JSON.stringify(_tempUrutanAnswer) : "",
+      idGejala: _tempIdGejala.length > 0 ? JSON.stringify(_tempIdGejala) : "",
+      nilaiAnswer:
+        _tempNilaiAnswer.length > 0 ? JSON.stringify(_tempNilaiAnswer) : "",
+    });
+
+    handleNext();
+  };
+
+  const handleDiagnosa = async () => {
+    if (
+      form.urutanAnswer !== "" &&
+      form.idGejala !== "" &&
+      form.nilaiAnswer !== ""
+    ) {
+      dispatch(createDiagnosa(form));
+      Swal.fire({
+        icon: "success",
+        title: "Sukses",
+        text: "Berhasil mendiagnosa",
       });
-      handleNext();
-      setRadio("");
-      console.log("Temp", _temp);
+      localStorage.clear();
+      router.push("/hasil-diagnosa");
     } else {
-      handleNext();
+      localStorage.clear();
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `Silahkan isi sesuai dengan gejala yang dialami.`,
+      });
     }
   };
 
   useEffect(() => {
     dispatch(fetchPertanyaanDiagnosa());
   }, [dispatch, page]);
+
+  useEffect(() => {
+    localStorage.clear();
+    if (page !== 1) {
+      window.location.reload();
+    }
+  }, []);
 
   return (
     <Content title="Diagnosa">
@@ -198,7 +265,7 @@ const Diagnosa = () => {
                 className="btn btn-accent text-white"
                 onClick={handleSimpan}
               >
-                {page === total_page ? "Simpan" : "Selanjutnya"}
+                Simpan
               </button>
             </div>
           </div>
@@ -222,6 +289,16 @@ const Diagnosa = () => {
             »
           </button>
         </div>
+      </div>
+
+      <div className="flex justify-center mt-4">
+        <button
+          type="button"
+          className="btn btn-primary btn-block"
+          onClick={handleDiagnosa}
+        >
+          Diagnosa
+        </button>
       </div>
     </Content>
   );
