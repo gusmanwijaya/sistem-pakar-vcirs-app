@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 
 const HasilDiagnosa = () => {
+  const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
+  const directory = "hama-penyakit";
+
   const hasilDiagnosa = useSelector((state) => state.diagnosaReducers);
 
   return (
@@ -41,12 +44,40 @@ const HasilDiagnosa = () => {
                 {hasilDiagnosa?.percentage || "0%"}
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            {hasilDiagnosa?.hamaPenyakit?.foto &&
+              hasilDiagnosa?.hamaPenyakit?.foto !== "" && (
+                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Foto</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <img
+                      src={`${API_IMAGE}/${directory}/${hasilDiagnosa?.hamaPenyakit?.foto}`}
+                      alt="Foto"
+                      className="w-1/2 h-full object-cover"
+                    />
+                  </dd>
+                </div>
+              )}
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">
                 Hasil Diagnosa
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {hasilDiagnosa?.hamaPenyakit?.nama || "-"}
+              </dd>
+            </div>
+            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">Gejala</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                <div className="flex flex-col space-y-4">
+                  {hasilDiagnosa?.hamaPenyakit?.gejala?.length > 0 &&
+                    hasilDiagnosa?.hamaPenyakit?.gejala.map((value, index) => (
+                      <div key={index}>
+                        <div className="text-sm opacity-50">
+                          {index + 1}. {value?.deskripsi}
+                        </div>
+                      </div>
+                    ))}
+                </div>
               </dd>
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
