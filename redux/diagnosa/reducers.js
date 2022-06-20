@@ -1,6 +1,14 @@
-import { SET_DIAGNOSA } from "./types";
+import {
+  SET_DIAGNOSA,
+  GET_ALL_DIAGNOSA,
+  ERROR_DIAGNOSA,
+  SET_PAGE,
+  SET_USER,
+} from "./types";
 
 const initialState = {
+  user: "",
+  tanggal: "",
   variable: [],
   totalVariable: 0,
   variableOrder: [],
@@ -15,6 +23,11 @@ const initialState = {
   cfCombine: 0,
   percentage: "",
   hamaPenyakit: {},
+  page: 1,
+  limit: 10,
+  total_page: 1,
+  allData: [],
+  error: {},
 };
 
 const reducers = (state = initialState, action) => {
@@ -22,6 +35,8 @@ const reducers = (state = initialState, action) => {
     case SET_DIAGNOSA:
       return {
         ...state,
+        user: action.user,
+        tanggal: action.tanggal,
         variable: action.variable,
         totalVariable: action.totalVariable,
         variableOrder: action.variableOrder,
@@ -36,6 +51,31 @@ const reducers = (state = initialState, action) => {
         cfCombine: action.cfCombine,
         percentage: action.percentage,
         hamaPenyakit: action.hamaPenyakit,
+      };
+
+    case GET_ALL_DIAGNOSA:
+      return {
+        ...state,
+        allData: action.allData,
+        total_page: action.total_page,
+      };
+
+    case ERROR_DIAGNOSA:
+      return {
+        ...state,
+        error: action.error,
+      };
+
+    case SET_USER:
+      return {
+        ...state,
+        user: action.user,
+      };
+
+    case SET_PAGE:
+      return {
+        ...state,
+        page: action.page,
       };
 
     default:

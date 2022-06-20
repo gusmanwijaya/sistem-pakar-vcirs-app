@@ -35,92 +35,79 @@ export default function Register() {
   return (
     <>
       <Header title="Register" />
-      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Register
-            </h2>
-          </div>
-          <div className="mt-10 sm:mt-0">
-            <div className="mt-5 md:mt-0 md:col-span-2">
-              <div className="shadow overflow-hidden sm:rounded-md">
-                <div className="px-4 py-5 bg-white space-y-4 sm:p-6">
-                  <div className="col-span-6">
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Nama Lengkap
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      autoComplete="name"
-                      className="mt-1 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                      onChange={(event) =>
-                        setForm({ ...form, name: event.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <label
-                      htmlFor="username"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Username
-                    </label>
-                    <input
-                      type="text"
-                      name="username"
-                      autoComplete="username"
-                      className="mt-1 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                      onChange={(event) =>
-                        setForm({ ...form, username: event.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      autoComplete="password"
-                      className="mt-1 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                      onChange={(event) =>
-                        setForm({ ...form, password: event.target.value })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <button
-                    onClick={handleRegister}
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Register
-                  </button>
-                </div>
+      <div className="grid grid-cols-12">
+        <div className="col-span-4 font-bold min-h-screen pl-7">
+          <div className="grid grid-rows-6 grid-flow-col min-h-screen items-center justify-items-start">
+            <div className="row-span-4 row-start-2 text-4xl">
+              Daftar
+              <div className="pt-10 pr-20">
+                <label className="text-sm font-medium">Nama lengkap</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Ketikkan nama lengkap"
+                  className="w-full py-3 px-12 border hover:border-slate-500 rounded shadow text-base"
+                  onChange={(event) =>
+                    setForm({ ...form, name: event.target.value })
+                  }
+                />
               </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="text-sm">
-              <Link href="/">
+              <div className="pt-2 pr-20">
+                <label className="text-sm font-medium">Nama pengguna</label>
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="Ketikkan nama pengguna"
+                  className=" w-full py-3 px-12 border hover:border-slate-500 rounded shadow text-base"
+                  onChange={(event) =>
+                    setForm({ ...form, username: event.target.value })
+                  }
+                />
+              </div>
+              <div className="pt-2 pr-20">
+                <label className="text-sm font-medium">Kata sandi</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Ketikkan kata sandi"
+                  className=" w-full py-3 px-12 border hover:border-slate-500 rounded shadow text-base"
+                  onChange={(event) =>
+                    setForm({ ...form, password: event.target.value })
+                  }
+                />
+              </div>
+              <div className="text-sm font-medium w-full pr-20 pt-14">
                 <button
                   type="button"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  className="text-center w-full py-4 bg-blue-700 hover:bg-blue-400 rounded-md text-white"
+                  onClick={handleRegister}
                 >
-                  Kembali
+                  DAFTAR
                 </button>
-              </Link>
+              </div>
             </div>
+            <Link href="/">
+              <button className="text-sm font-medium text-slate-400 underline">
+                Sudah punya akun? Masuk
+              </button>
+            </Link>
           </div>
+        </div>
+
+        <div
+          className="col-span-8 font-bold flex flex-col justify-center items-center px-14"
+          style={{
+            background: `url(
+              "https://images.unsplash.com/photo-1561986810-4f3ba2f46ceb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8Y29mZmVlJTIwcGxhbnRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60"
+            )`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+          }}
+        >
+          <span className="text-center text-slate-100 text-3xl">
+            Sistem Pakar Untuk Mengidentifikasi Hama dan Penyakit Pada Tanaman
+            Kopi Robusta
+          </span>
         </div>
       </div>
     </>

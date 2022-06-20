@@ -6,8 +6,10 @@ import { fetchPertanyaanDiagnosa, setPage } from "../redux/pertanyaan/actions";
 import { createDiagnosa } from "../redux/diagnosa/actions";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
+import jwtDecode from "jwt-decode";
+import moment from "moment";
 
-const Diagnosa = () => {
+const Diagnosa = ({ user }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -17,6 +19,10 @@ const Diagnosa = () => {
 
   const [radio, setRadio] = useState("");
   const [form, setForm] = useState({
+    user: user?._id,
+    tanggal: `${moment().get("date")}-${
+      moment().get("month") + 1
+    }-${moment().get("year")}`,
     urutanAnswer: "",
     idGejala: "",
     nilaiAnswer: "",
@@ -316,7 +322,11 @@ export async function getServerSideProps({ req }) {
       },
     };
 
+  const user = jwtDecode(token);
+
   return {
-    props: {},
+    props: {
+      user,
+    },
   };
 }

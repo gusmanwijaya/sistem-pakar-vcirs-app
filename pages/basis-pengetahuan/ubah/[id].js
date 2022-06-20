@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { getForSelect as getForSelectHamaPenyakit } from "../../../services/hama-penyakit";
 import { getForSelect as getForSelectGejala } from "../../../services/gejala";
 import jwtDecode from "jwt-decode";
+import Link from "next/link";
 
 const Ubah = ({ oneData, params, dataHamaPenyakit, dataGejala }) => {
   const router = useRouter();
@@ -51,6 +52,28 @@ const Ubah = ({ oneData, params, dataHamaPenyakit, dataGejala }) => {
   return (
     <Content title="Ubah Basis Pengetahuan">
       <div className="max-w-2xl mx-auto">
+        <Link href="/basis-pengetahuan">
+          <button
+            type="button"
+            className="mb-6 max-w-2xl text-sm text-gray-500 flex flex-row items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7 16l-4-4m0 0l4-4m-4 4h18"
+              />
+            </svg>{" "}
+            Kembali
+          </button>
+        </Link>
         <div className="relative z-0 mb-6 w-full group">
           <label
             htmlFor="hamaPenyakit"

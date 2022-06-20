@@ -23,14 +23,16 @@ const LayoutTable = ({
     <>
       {data.length > 0 ? (
         <div className="flex flex-col justify-center items-start space-y-4">
-          <button
-            onClick={() => {
-              router.push(urlTambah);
-            }}
-            className="btn btn-xs btn-outline btn-info capitalize"
-          >
-            Tambah
-          </button>
+          {urlTambah && (
+            <button
+              onClick={() => {
+                router.push(urlTambah);
+              }}
+              className="btn btn-xs btn-outline btn-info capitalize"
+            >
+              Tambah
+            </button>
+          )}
           <div className="overflow-x-auto w-full">
             <table className="table w-full">
               <thead>
