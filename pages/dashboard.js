@@ -2,8 +2,22 @@
 import Content from "../components/Content";
 import jwtDecode from "jwt-decode";
 import { getAll } from "../services/dashboard";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllHamaPenyakit } from "../redux/hama-penyakit/actions";
+import { useEffect } from "react";
+import Link from "next/link";
 
 const Dashboard = ({ data, users }) => {
+  const dispatch = useDispatch();
+  const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
+  const directory = "hama-penyakit";
+
+  const { allData } = useSelector((state) => state.hamaPenyakitReducers);
+
+  useEffect(() => {
+    dispatch(fetchAllHamaPenyakit());
+  }, [dispatch]);
+
   return (
     <Content title="Dashboard">
       <div className="alert shadow-lg">
@@ -223,6 +237,41 @@ const Dashboard = ({ data, users }) => {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      </div>
+      <div className="bg-white rounded-lg px-8 py-8">
+        <div className="max-w-2xl mx-auto lg:max-w-none">
+          <h2 className="text-2xl font-extrabold text-gray-600">
+            Informasi Hama/Penyakit
+          </h2>
+
+          <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:gap-y-12">
+            {allData.length > 0 &&
+              allData.map((value, index) => (
+                <Link key={index} href={`/informasi/${value?._id}`}>
+                  <div className="cursor-pointer group relative mb-6 lg:mb-0">
+                    <div className="relative w-full h-full rounded-lg overflow-hidden group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
+                      {value?.foto ? (
+                        <img
+                          src={`${API_IMAGE}/${directory}/${value?.foto}`}
+                          alt={value?.nama}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <img
+                          src={`/img/empty.svg`}
+                          alt="Empty"
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <p className="text-base text-center font-semibold text-slate-400 mt-4">
+                      {value?.nama}
+                    </p>
+                  </div>
+                </Link>
+              ))}
           </div>
         </div>
       </div>

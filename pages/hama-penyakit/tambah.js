@@ -38,6 +38,7 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
   const [form, setForm] = useState({
     kode: "",
     nama: "",
+    deskripsi: "",
     gejala: [],
     solusi: [],
     foto: "",
@@ -90,6 +91,7 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
     let formData = new FormData();
     formData.append("kode", form.kode);
     formData.append("nama", form.nama);
+    formData.append("deskripsi", form.deskripsi);
     formData.append("foto", form.foto);
     formData.append("gejala", JSON.stringify(form.gejala));
     formData.append("solusi", JSON.stringify(form.solusi));
@@ -164,6 +166,21 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
             className="input input-bordered w-full"
             required
             onChange={(event) => setForm({ ...form, nama: event.target.value })}
+          />
+        </div>
+        <div className="relative z-0 mb-6 w-full group">
+          <label
+            htmlFor="deskripsi"
+            className="block text-sm font-medium text-gray-400 mb-2"
+          >
+            Deskripsi
+          </label>
+          <textarea
+            name="deskripsi"
+            className="textarea textarea-bordered w-full"
+            onChange={(event) =>
+              setForm({ ...form, deskripsi: event.target.value })
+            }
           />
         </div>
         <div className="relative mb-6 w-full group">
