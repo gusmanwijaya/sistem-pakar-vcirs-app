@@ -2,14 +2,16 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Content from "../../components/Content";
-import LayoutTable from "../../components/LayoutTable";
+import Pagination from "../../components/Pagination";
 import { fetchAllPertanyaan, setPage } from "../../redux/pertanyaan/actions";
 import Swal from "sweetalert2";
 import { destroy } from "../../services/pertanyaan";
 import jwtDecode from "jwt-decode";
+import { useRouter } from "next/router";
 
 const Pertanyaan = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { allData, page, total_page } = useSelector(
     (state) => state.pertanyaanReducers
   );
@@ -61,20 +63,89 @@ const Pertanyaan = () => {
 
   return (
     <Content title="Pertanyaan">
-      <LayoutTable
-        thead={["Pertanyaan"]}
-        tbody={["pertanyaan"]}
-        data={allData}
-        urlTambah="/pertanyaan/tambah"
-        urlDetail="/pertanyaan/detail"
-        urlUbah="/pertanyaan/ubah"
-        handleDelete={(id) => onDelete(id)}
-        page={page}
-        handlePrevious={handlePrevious}
-        handleNext={handleNext}
-        disabledPrevious={page <= 1 ? true : false}
-        disabledNext={page === total_page ? true : false}
-      />
+      <div
+        className={
+          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white"
+        }
+      >
+        <div className="rounded-t mb-0 px-4 py-3 border-0">
+          <div className="flex flex-row items-center">
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => router.push("/pertanyaan/tambah")}
+            >
+              Tambah
+            </button>
+          </div>
+        </div>
+        <div className="block w-full overflow-x-auto">
+          {/* Projects table */}
+          <table className="items-center w-full bg-transparent border-collapse">
+            <thead>
+              <tr>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  Pertanyaan
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  Gejala
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                ></th>
+              </tr>
+            </thead>
+            <tbody>
+              {allData.length > 0 &&
+                allData.map((value, index) => (
+                  <tr key={index}>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.pertanyaan}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.gejala?.deskripsi}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center space-x-1">
+                      <button
+                        className="btn btn-ghost btn-xs capitalize text-orange-500"
+                        onClick={() =>
+                          router.push(`/pertanyaan/ubah/${value?._id}`)
+                        }
+                      >
+                        Ubah
+                      </button>
+                      <button
+                        className="btn btn-ghost btn-xs capitalize text-red-500"
+                        onClick={() => onDelete(value?._id)}
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex flex-row justify-end px-4 py-4">
+          <Pagination
+            page={page}
+            handleNext={handleNext}
+            handlePrevious={handlePrevious}
+            disabledPrevious={page <= 1 ? true : false}
+            disabledNext={page === total_page ? true : false}
+          />
+        </div>
+      </div>
     </Content>
   );
 };

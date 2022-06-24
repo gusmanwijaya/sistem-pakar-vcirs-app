@@ -188,7 +188,7 @@ const Ubah = ({ oneData, params }) => {
               <img
                 src={form?.imagePreview}
                 alt="Preview"
-                className="w-1/2 h-1/2 object-cover"
+                className="w-1/2 h-1/2 object-cover rounded-3xl"
               />
             </div>
           )}

@@ -2,14 +2,18 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Content from "../../components/Content";
-import LayoutTable from "../../components/LayoutTable";
+import Pagination from "../../components/Pagination";
 import { fetchAllGejala, setPage } from "../../redux/gejala/actions";
 import Swal from "sweetalert2";
 import { destroy } from "../../services/gejala";
 import jwtDecode from "jwt-decode";
+import { useRouter } from "next/router";
 
 const Gejala = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
+  const directory = "gejala";
   const { allData, page, total_page } = useSelector(
     (state) => state.gejalaReducers
   );
@@ -61,20 +65,126 @@ const Gejala = () => {
 
   return (
     <Content title="Gejala">
-      <LayoutTable
-        thead={["Kode", "Gejala"]}
-        tbody={["kode", "deskripsi"]}
-        data={allData}
-        urlTambah="/gejala/tambah"
-        urlDetail="/gejala/detail"
-        urlUbah="/gejala/ubah"
-        handleDelete={(id) => onDelete(id)}
-        page={page}
-        handlePrevious={handlePrevious}
-        handleNext={handleNext}
-        disabledPrevious={page <= 1 ? true : false}
-        disabledNext={page === total_page ? true : false}
-      />
+      <div
+        className={
+          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white"
+        }
+      >
+        <div className="rounded-t mb-0 px-4 py-3 border-0">
+          <div className="flex flex-row items-center">
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => router.push("/gejala/tambah")}
+            >
+              Tambah
+            </button>
+          </div>
+        </div>
+        <div className="block w-full overflow-x-auto">
+          {/* Projects table */}
+          <table className="items-center w-full bg-transparent border-collapse">
+            <thead>
+              <tr>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  Kode
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  Gejala
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  Credit
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  Num of Node
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                ></th>
+              </tr>
+            </thead>
+            <tbody>
+              {allData.length > 0 &&
+                allData.map((value, index) => (
+                  <tr key={index}>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.kode}
+                    </td>
+                    {value?.foto ? (
+                      <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                        <img
+                          src={
+                            value?.foto
+                              ? `${API_IMAGE}/${directory}/${value?.foto}`
+                              : "/img/empty.svg"
+                          }
+                          className="h-12 w-12 bg-white rounded-full border"
+                          alt="..."
+                        ></img>{" "}
+                        <span className={"ml-3 font-bold text-blueGray-600"}>
+                          {value?.deskripsi}
+                        </span>
+                      </th>
+                    ) : (
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        {value?.deskripsi}
+                      </td>
+                    )}
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.credit}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.numOfNode}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center space-x-1">
+                      <button
+                        className="btn btn-ghost btn-xs capitalize text-orange-500"
+                        onClick={() =>
+                          router.push(`/gejala/ubah/${value?._id}`)
+                        }
+                      >
+                        Ubah
+                      </button>
+                      <button
+                        className="btn btn-ghost btn-xs capitalize text-red-500"
+                        onClick={() => onDelete(value?._id)}
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex flex-row justify-end px-4 py-4">
+          <Pagination
+            page={page}
+            handleNext={handleNext}
+            handlePrevious={handlePrevious}
+            disabledPrevious={page <= 1 ? true : false}
+            disabledNext={page === total_page ? true : false}
+          />
+        </div>
+      </div>
     </Content>
   );
 };

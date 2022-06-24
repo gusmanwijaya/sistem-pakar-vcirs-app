@@ -111,13 +111,6 @@ export default function Navbar() {
           )}
 
           <li>
-            <Link href="/history-diagnosa">
-              <button className="btn btn-active btn-ghost capitalize">
-                History Diagnosa
-              </button>
-            </Link>
-          </li>
-          <li>
             <Link href="/diagnosa">
               <button className="btn btn-active btn-ghost capitalize">
                 Diagnosa

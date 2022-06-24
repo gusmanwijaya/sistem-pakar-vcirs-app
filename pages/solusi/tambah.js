@@ -64,10 +64,9 @@ const Tambah = () => {
           >
             Solusi
           </label>
-          <input
-            type="text"
+          <textarea
             name="deskripsi"
-            className="input input-bordered w-full"
+            className="textarea textarea-bordered w-full"
             required
             onChange={(event) =>
               setForm({ ...form, deskripsi: event.target.value })

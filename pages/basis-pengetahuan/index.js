@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Content from "../../components/Content";
+import Pagination from "../../components/Pagination";
 import {
   fetchAllBasisPengetahuan,
   setPage,
@@ -65,100 +66,98 @@ const BasisPengetahuan = () => {
 
   return (
     <Content title="Basis Pengetahuan">
-      <div className="flex flex-col justify-center items-start space-y-4">
-        <button
-          onClick={() => {
-            router.push(`/basis-pengetahuan/tambah`);
-          }}
-          className="btn btn-xs btn-outline btn-info capitalize"
-        >
-          Tambah
-        </button>
-        {allData.length > 0 ? (
-          <>
-            <div className="overflow-x-auto w-full">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th>Hama/Penyakit</th>
-                    <th>Gejala</th>
-                    <th>CF Pakar</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allData.map((value, index) => (
-                    <tr key={index}>
-                      <td>{value?.hamaPenyakit?.nama}</td>
-                      <td>
-                        {value?.gejala?.deskripsi.length > 110
-                          ? value?.gejala?.deskripsi.slice(0, 110)
-                          : value?.gejala?.deskripsi}
-                      </td>
-                      <td>{value?.cfPakar}</td>
-                      <th className="w-1/12">
-                        <div className="flex flex-row justify-center items-center space-x-1">
-                          <button
-                            onClick={() => {
-                              router.push(
-                                `/basis-pengetahuan/detail/${value?._id}`
-                              );
-                            }}
-                            className="btn btn-ghost btn-xs capitalize"
-                          >
-                            Detail
-                          </button>
-                          <button
-                            onClick={() => {
-                              router.push(
-                                `/basis-pengetahuan/ubah/${value?._id}`
-                              );
-                            }}
-                            className="btn btn-ghost btn-xs capitalize text-orange-500"
-                          >
-                            Ubah
-                          </button>
-                          <button
-                            onClick={() => onDelete(value?._id)}
-                            className="btn btn-ghost btn-xs capitalize text-red-500"
-                          >
-                            Hapus
-                          </button>
-                        </div>
-                      </th>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="btn-group">
-              <button
-                className="btn"
-                onClick={handlePrevious}
-                disabled={page <= 1 ? true : false}
-              >
-                «
-              </button>
-              <button className="btn">Page {page}</button>
-              <button
-                className="btn"
-                onClick={handleNext}
-                disabled={page === total_page ? true : false}
-              >
-                »
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="flex flex-col justify-center items-center space-y-1">
-            <img
-              src="/img/empty.svg"
-              alt="Empty"
-              className="w-1/2 h-1/2 object-cover"
-            />
-            <p className="text-slate-500">Oops, nampaknya data masih kosong!</p>
+      <div
+        className={
+          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white"
+        }
+      >
+        <div className="rounded-t mb-0 px-4 py-3 border-0">
+          <div className="flex flex-row items-center">
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => router.push("/basis-pengetahuan/tambah")}
+            >
+              Tambah
+            </button>
           </div>
-        )}
+        </div>
+        <div className="block w-full overflow-x-auto">
+          {/* Projects table */}
+          <table className="items-center w-full bg-transparent border-collapse">
+            <thead>
+              <tr>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  Hama/Penyakit
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  Gejala
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                >
+                  CF Pakar
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                  }
+                ></th>
+              </tr>
+            </thead>
+            <tbody>
+              {allData.length > 0 &&
+                allData.map((value, index) => (
+                  <tr key={index}>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.hamaPenyakit?.nama}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.gejala?.deskripsi}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.cfPakar}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center space-x-1">
+                      <button
+                        className="btn btn-ghost btn-xs capitalize text-orange-500"
+                        onClick={() =>
+                          router.push(`/basis-pengetahuan/ubah/${value?._id}`)
+                        }
+                      >
+                        Ubah
+                      </button>
+                      <button
+                        className="btn btn-ghost btn-xs capitalize text-red-500"
+                        onClick={() => onDelete(value?._id)}
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex flex-row justify-end px-4 py-4">
+          <Pagination
+            page={page}
+            handleNext={handleNext}
+            handlePrevious={handlePrevious}
+            disabledPrevious={page <= 1 ? true : false}
+            disabledNext={page === total_page ? true : false}
+          />
+        </div>
       </div>
     </Content>
   );

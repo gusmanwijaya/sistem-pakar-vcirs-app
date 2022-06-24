@@ -11,7 +11,7 @@ const Detail = ({ oneData }) => {
     <Content title="Detail History Diagnosa">
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6">
-          <Link href="/history-diagnosa">
+          <Link href="/dashboard">
             <button
               type="button"
               className="mt-1 max-w-2xl text-sm text-gray-500 flex flex-row items-center"
@@ -63,7 +63,7 @@ const Detail = ({ oneData }) => {
                   <img
                     src={`${API_IMAGE}/${directory}/${oneData?.hamaPenyakit?.foto}`}
                     alt="Foto"
-                    className="w-1/2 h-full object-cover"
+                    className="w-1/2 h-full object-cover rounded-3xl"
                   />
                 </dd>
               </div>

@@ -44,7 +44,7 @@ const Detail = ({ oneData }) => {
                   <img
                     src={`${API_IMAGE}/${directory}/${oneData?.foto}`}
                     alt="Foto"
-                    className="w-1/2 h-full object-cover"
+                    className="w-1/2 h-full object-cover rounded-3xl"
                   />
                 </dd>
               </div>

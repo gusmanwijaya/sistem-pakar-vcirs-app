@@ -10,14 +10,18 @@ const Pagination = ({
   return (
     <div className="btn-group">
       <button
-        className="btn"
+        className="btn btn-sm"
         onClick={handlePrevious}
         disabled={disabledPrevious}
       >
         «
       </button>
-      <button className="btn">Page {page}</button>
-      <button className="btn" onClick={handleNext} disabled={disabledNext}>
+      <button className="btn btn-sm">Page {page}</button>
+      <button
+        className="btn btn-sm"
+        onClick={handleNext}
+        disabled={disabledNext}
+      >
         »
       </button>
     </div>
