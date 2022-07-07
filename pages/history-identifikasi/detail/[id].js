@@ -1,14 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import Content from "../../../components/Content";
 import Link from "next/link";
-import { getOne } from "../../../services/diagnosa";
+import { getForDetail } from "../../../services/hasil-identifikasi";
 
 const Detail = ({ oneData }) => {
   const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
   const directory = "hama-penyakit";
 
   return (
-    <Content title="Detail History Diagnosa">
+    <Content title="Detail History Identifikasi">
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6">
           <Link href="/dashboard">
@@ -70,7 +70,7 @@ const Detail = ({ oneData }) => {
             )}
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">
-                Hasil Diagnosa
+                Hasil Identifikasi
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {oneData?.hamaPenyakit?.nama || "-"}
@@ -125,7 +125,7 @@ export async function getServerSideProps({ req, params }) {
       },
     };
 
-  const response = await getOne(params?.id, token);
+  const response = await getForDetail(params.id, token);
 
   return {
     props: {

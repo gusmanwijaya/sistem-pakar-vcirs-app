@@ -15,7 +15,7 @@ const Tambah = () => {
     deskripsi: "",
     foto: "",
     imagePreview: "",
-    numOfNode: 0,
+    pertanyaan: "",
   });
 
   const handleUploadPhoto = (event) => {
@@ -41,7 +41,7 @@ const Tambah = () => {
     formData.append("kode", form.kode);
     formData.append("deskripsi", form.deskripsi);
     formData.append("foto", form.foto);
-    formData.append("numOfNode", form.numOfNode);
+    formData.append("pertanyaan", form.pertanyaan);
 
     const response = await create(formData);
     if (response?.data?.statusCode === 201) {
@@ -119,19 +119,18 @@ const Tambah = () => {
         </div>
         <div className="relative z-0 mb-6 w-full group">
           <label
-            htmlFor="numOfNode"
+            htmlFor="pertanyaan"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
-            Num of Node
+            Pertanyaan
           </label>
           <input
-            type="number"
-            min={0}
-            name="numOfNode"
+            type="text"
+            name="pertanyaan"
             className="input input-bordered w-full"
             required
             onChange={(event) =>
-              setForm({ ...form, numOfNode: event.target.value })
+              setForm({ ...form, pertanyaan: event.target.value })
             }
           />
         </div>

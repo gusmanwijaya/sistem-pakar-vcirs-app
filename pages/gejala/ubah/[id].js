@@ -19,8 +19,7 @@ const Ubah = ({ oneData, params }) => {
     deskripsi: "",
     foto: "",
     imagePreview: "",
-    credit: 0,
-    numOfNode: 0,
+    pertanyaan: "",
   });
 
   useEffect(() => {
@@ -29,8 +28,7 @@ const Ubah = ({ oneData, params }) => {
         ...form,
         kode: oneData?.kode || "",
         deskripsi: oneData?.deskripsi || "",
-        credit: oneData?.credit || 0,
-        numOfNode: oneData?.numOfNode || 0,
+        pertanyaan: oneData?.pertanyaan || "",
         imagePreview:
           oneData?.foto && oneData?.foto !== ""
             ? `${API_IMAGE}/${directory}/${oneData?.foto}`
@@ -62,8 +60,7 @@ const Ubah = ({ oneData, params }) => {
     formData.append("kode", form.kode);
     formData.append("deskripsi", form.deskripsi);
     formData.append("foto", form.foto);
-    formData.append("credit", form.credit);
-    formData.append("numOfNode", form.numOfNode);
+    formData.append("pertanyaan", form.pertanyaan);
 
     const response = await update(params?.id, formData);
     if (response?.data?.statusCode === 200) {
@@ -143,40 +140,20 @@ const Ubah = ({ oneData, params }) => {
         </div>
         <div className="relative z-0 mb-6 w-full group">
           <label
-            htmlFor="credit"
+            htmlFor="pertanyaan"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
-            Credit
+            Pertanyaan
           </label>
           <input
-            type="number"
-            min={0}
-            name="credit"
+            type="text"
+            name="pertanyaan"
             className="input input-bordered w-full"
             required
             onChange={(event) =>
-              setForm({ ...form, credit: event.target.value })
+              setForm({ ...form, pertanyaan: event.target.value })
             }
-            value={form?.credit}
-          />
-        </div>
-        <div className="relative z-0 mb-6 w-full group">
-          <label
-            htmlFor="numOfNode"
-            className="block text-sm font-medium text-gray-400 mb-2"
-          >
-            Num of Node
-          </label>
-          <input
-            type="number"
-            min={0}
-            name="numOfNode"
-            className="input input-bordered w-full"
-            required
-            onChange={(event) =>
-              setForm({ ...form, numOfNode: event.target.value })
-            }
-            value={form?.numOfNode}
+            value={form?.pertanyaan}
           />
         </div>
         <div className="relative mb-6 w-full group space-y-3">

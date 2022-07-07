@@ -1,42 +1,30 @@
 /* eslint-disable @next/next/no-img-element */
 import Content from "../components/Content";
-import Pagination from "../components/Pagination";
 import jwtDecode from "jwt-decode";
 import { getAll } from "../services/dashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllHamaPenyakit } from "../redux/hama-penyakit/actions";
 import { useEffect } from "react";
 import Link from "next/link";
-import { fetchAllDiagnosa, setPage } from "../redux/diagnosa/actions";
+import {
+  getForUser,
+  getAll as getForAdmin,
+} from "../services/hasil-identifikasi";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
-import { destroy } from "../services/diagnosa";
+import { destroy } from "../services/identifikasi";
 
-const Dashboard = ({ data, users }) => {
+const Dashboard = ({ data, users, historyForUser, historyForAdmin }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
   const directory = "hama-penyakit";
 
   const { allData } = useSelector((state) => state.hamaPenyakitReducers);
-  const {
-    allData: allDataHistory,
-    page,
-    total_page,
-  } = useSelector((state) => state.diagnosaReducers);
-
-  const handlePrevious = () => {
-    dispatch(setPage(page <= 1 ? 1 : page - 1));
-  };
-
-  const handleNext = () => {
-    dispatch(setPage(page === total_page ? total_page : page + 1));
-  };
 
   useEffect(() => {
     dispatch(fetchAllHamaPenyakit());
-    dispatch(fetchAllDiagnosa(users?.role === "pengguna" ? users?._id : ""));
-  }, [dispatch, page, users?._id, users?.role]);
+  }, [dispatch]);
 
   const onDelete = (id) => {
     Swal.fire({
@@ -57,9 +45,7 @@ const Dashboard = ({ data, users }) => {
             title: "Sukses",
             text: `${response?.data?.message || "Berhasil menghapus data!"}`,
           });
-          dispatch(
-            fetchAllDiagnosa(users?.role === "pengguna" ? users?._id : "")
-          );
+          router.push("/dashboard");
         } else {
           Swal.fire({
             icon: "error",
@@ -182,32 +168,6 @@ const Dashboard = ({ data, users }) => {
                 </div>
               </>
             )}
-            <div className="flex items-center p-4 bg-white rounded-lg shadow-xs">
-              <div className="p-3 mr-4 text-violet-500 bg-violet-100 rounded-full">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p className="mb-2 text-sm font-medium text-gray-600">
-                  Pertanyaan
-                </p>
-                <p className="text-lg font-semibold text-gray-700">
-                  {data?.pertanyaan || 0}
-                </p>
-              </div>
-            </div>
             {users?.role === "admin" && (
               <div className="flex items-center p-4 bg-white rounded-lg shadow-xs">
                 <div className="p-3 mr-4 text-amber-500 bg-amber-100 rounded-full">
@@ -260,7 +220,9 @@ const Dashboard = ({ data, users }) => {
                   Hasil Diagnosa
                 </p>
                 <p className="text-lg font-semibold text-gray-700">
-                  {data?.hasilDiagnosa || 0}
+                  {users?.role === "admin"
+                    ? historyForAdmin.length
+                    : historyForUser.length}
                 </p>
               </div>
             </div>
@@ -305,7 +267,7 @@ const Dashboard = ({ data, users }) => {
           <div className="flex flex-wrap items-center">
             <div className="relative w-full px-4 max-w-full flex-grow flex-1">
               <h3 className={"font-semibold text-lg text-gray-600"}>
-                History Diagnosa
+                History Identifikasi
               </h3>
             </div>
           </div>
@@ -351,8 +313,9 @@ const Dashboard = ({ data, users }) => {
               </tr>
             </thead>
             <tbody>
-              {allDataHistory.length > 0 &&
-                allDataHistory.map((value, index) => (
+              {users?.role === "pengguna" &&
+                historyForUser.length > 0 &&
+                historyForUser.map((value, index) => (
                   <tr key={index}>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                       {value?.tanggal}
@@ -365,7 +328,11 @@ const Dashboard = ({ data, users }) => {
                     </td>
                     <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                       <img
-                        src={`${API_IMAGE}/${directory}/${value?.hamaPenyakit?.foto}`}
+                        src={
+                          value?.hamaPenyakit?.foto
+                            ? `${API_IMAGE}/${directory}/${value?.hamaPenyakit?.foto}`
+                            : "/img/empty.svg"
+                        }
                         className="h-12 w-12 bg-white rounded-full border"
                         alt="..."
                       ></img>{" "}
@@ -377,7 +344,51 @@ const Dashboard = ({ data, users }) => {
                       <button
                         className="btn btn-ghost btn-xs capitalize"
                         onClick={() =>
-                          router.push(`/history-diagnosa/detail/${value?._id}`)
+                          router.push(
+                            `/history-identifikasi/detail/${value?._id}`
+                          )
+                        }
+                      >
+                        Detail
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+
+              {users?.role === "admin" &&
+                historyForAdmin.length > 0 &&
+                historyForAdmin.map((value, index) => (
+                  <tr key={index}>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.tanggal}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.user?.name}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {value?.percentage}
+                    </td>
+                    <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                      <img
+                        src={
+                          value?.hamaPenyakit?.foto
+                            ? `${API_IMAGE}/${directory}/${value?.hamaPenyakit?.foto}`
+                            : "/img/empty.svg"
+                        }
+                        className="h-12 w-12 bg-white rounded-full border"
+                        alt="..."
+                      ></img>{" "}
+                      <span className={"ml-3 font-bold text-blueGray-600"}>
+                        {value?.hamaPenyakit?.nama}
+                      </span>
+                    </th>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center space-x-1">
+                      <button
+                        className="btn btn-ghost btn-xs capitalize"
+                        onClick={() =>
+                          router.push(
+                            `/history-identifikasi/detail/${value?._id}`
+                          )
                         }
                       >
                         Detail
@@ -396,7 +407,7 @@ const Dashboard = ({ data, users }) => {
             </tbody>
           </table>
         </div>
-        <div className="flex flex-row justify-end px-4 py-4">
+        {/* <div className="flex flex-row justify-end px-4 py-4">
           <Pagination
             page={page}
             handleNext={handleNext}
@@ -404,7 +415,7 @@ const Dashboard = ({ data, users }) => {
             disabledPrevious={page <= 1 ? true : false}
             disabledNext={page === total_page ? true : false}
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="bg-white rounded-lg px-8 py-8">
@@ -465,10 +476,15 @@ export async function getServerSideProps({ req }) {
     users?.role === "admin" ? "" : users?._id
   );
 
+  const responseHistoryIdentifikasiUser = await getForUser(token);
+  const responseHistoryIdentifikasiAdmin = await getForAdmin(token);
+
   return {
     props: {
       data: response?.data?.data || {},
       users,
+      historyForUser: responseHistoryIdentifikasiUser?.data?.data || [],
+      historyForAdmin: responseHistoryIdentifikasiAdmin?.data?.data || [],
     },
   };
 }

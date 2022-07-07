@@ -1,17 +1,36 @@
 /* eslint-disable @next/next/no-img-element */
 import Content from "../components/Content";
 import Link from "next/link";
-import { useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
+import { getHighest } from "../services/hasil-identifikasi";
+import moment from "moment";
+import { useCallback, useState, useEffect } from "react";
 
-const HasilDiagnosa = ({ user }) => {
+const HasilIdentifikasi = ({ users }) => {
   const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
   const directory = "hama-penyakit";
 
-  const hasilDiagnosa = useSelector((state) => state.diagnosaReducers);
+  const [dataHighest, setDataHighest] = useState({});
+
+  const fetchDataHighest = useCallback(async () => {
+    const response = await getHighest(
+      users?._id,
+      `${moment().get("date")}-${moment().get("month") + 1}-${moment().get(
+        "year"
+      )}`
+    );
+
+    if (response?.data?.statusCode === 200) {
+      setDataHighest(response?.data?.data || {});
+    }
+  }, [users?._id]);
+
+  useEffect(() => {
+    fetchDataHighest();
+  }, [fetchDataHighest]);
 
   return (
-    <Content title="Hasil Diagnosa">
+    <Content title="Hasil Identifikasi">
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6">
           <Link href="/dashboard">
@@ -44,48 +63,47 @@ const HasilDiagnosa = ({ user }) => {
                 Nama Pengguna
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {user?.name || ""}
+                {dataHighest?.user?.name || ""}
               </dd>
             </div>
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Tanggal</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {hasilDiagnosa?.tanggal || ""}
+                {dataHighest?.tanggal || ""}
               </dd>
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Persentase</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {hasilDiagnosa?.percentage || "0%"}
+                {dataHighest?.percentage || "0%"}
               </dd>
             </div>
-            {hasilDiagnosa?.hamaPenyakit?.foto &&
-              hasilDiagnosa?.hamaPenyakit?.foto !== "" && (
-                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-gray-500">Foto</dt>
-                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    <img
-                      src={`${API_IMAGE}/${directory}/${hasilDiagnosa?.hamaPenyakit?.foto}`}
-                      alt="Foto"
-                      className="w-1/2 h-full object-cover"
-                    />
-                  </dd>
-                </div>
-              )}
+            {dataHighest?.hamaPenyakit?.foto && (
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Foto</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <img
+                    src={`${API_IMAGE}/${directory}/${dataHighest?.hamaPenyakit?.foto}`}
+                    alt="Foto"
+                    className="w-1/2 h-full object-cover rounded-3xl"
+                  />
+                </dd>
+              </div>
+            )}
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">
-                Hasil Diagnosa
+                Hasil Identifikasi
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {hasilDiagnosa?.hamaPenyakit?.nama || "-"}
+                {dataHighest?.hamaPenyakit?.nama || "-"}
               </dd>
             </div>
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Gejala</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <div className="flex flex-col space-y-4">
-                  {hasilDiagnosa?.hamaPenyakit?.gejala?.length > 0 &&
-                    hasilDiagnosa?.hamaPenyakit?.gejala.map((value, index) => (
+                  {dataHighest?.hamaPenyakit?.gejala?.length > 0 &&
+                    dataHighest?.hamaPenyakit?.gejala.map((value, index) => (
                       <div key={index}>
                         <div className="text-sm opacity-50">
                           {index + 1}. {value?.deskripsi}
@@ -99,8 +117,8 @@ const HasilDiagnosa = ({ user }) => {
               <dt className="text-sm font-medium text-gray-500">Solusi</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <div className="flex flex-col space-y-4">
-                  {hasilDiagnosa?.hamaPenyakit?.solusi?.length > 0 &&
-                    hasilDiagnosa?.hamaPenyakit?.solusi.map((value, index) => (
+                  {dataHighest?.hamaPenyakit?.solusi?.length > 0 &&
+                    dataHighest?.hamaPenyakit?.solusi.map((value, index) => (
                       <div key={index}>
                         <div className="text-sm opacity-50">
                           {index + 1}. {value?.deskripsi}
@@ -117,7 +135,7 @@ const HasilDiagnosa = ({ user }) => {
   );
 };
 
-export default HasilDiagnosa;
+export default HasilIdentifikasi;
 
 export async function getServerSideProps({ req }) {
   const { token } = req.cookies;
@@ -129,11 +147,11 @@ export async function getServerSideProps({ req }) {
       },
     };
 
-  const user = jwtDecode(token);
+  const users = jwtDecode(token);
 
   return {
     props: {
-      user,
+      users,
     },
   };
 }

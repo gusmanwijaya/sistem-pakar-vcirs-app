@@ -8,7 +8,7 @@ import gejalaReducers from "./gejala/reducers";
 import solusiReducers from "./solusi/reducers";
 import pertanyaanReducers from "./pertanyaan/reducers";
 import basisPengetahuanReducers from "./basis-pengetahuan/reducers";
-import diagnosaReducers from "./diagnosa/reducers";
+import identifikasiReducers from "./identifikasi/reducers";
 
 let store;
 
@@ -18,7 +18,7 @@ const reducers = combineReducers({
   solusiReducers,
   pertanyaanReducers,
   basisPengetahuanReducers,
-  diagnosaReducers,
+  identifikasiReducers,
 });
 
 function initStore(initialState) {

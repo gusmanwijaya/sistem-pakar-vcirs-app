@@ -91,13 +91,6 @@ export default function Navbar() {
                       </button>
                     </Link>
                   </li>
-                  <li>
-                    <Link href="/pertanyaan">
-                      <button className="btn btn-ghost capitalize">
-                        Pertanyaan
-                      </button>
-                    </Link>
-                  </li>
                 </ul>
               </li>
               <li>
@@ -111,9 +104,9 @@ export default function Navbar() {
           )}
 
           <li>
-            <Link href="/diagnosa">
+            <Link href="/identifikasi">
               <button className="btn btn-active btn-ghost capitalize">
-                Diagnosa
+                Identifikasi
               </button>
             </Link>
           </li>
