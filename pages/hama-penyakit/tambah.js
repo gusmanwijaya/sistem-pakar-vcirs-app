@@ -70,9 +70,9 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
   };
 
   const handleUploadPhoto = (event) => {
-    const size = parseFloat(event?.target?.files[0]?.size / 3145728).toFixed(2);
+    const size = event?.target?.files[0]?.size;
 
-    if (size > 2) {
+    if (size > 3000000) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
