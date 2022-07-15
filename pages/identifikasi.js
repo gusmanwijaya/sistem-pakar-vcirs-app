@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Content from "../components/Content";
 import { fetchAllPertanyaan, setPage } from "../redux/pertanyaan/actions";
 import { createIdentifikasi } from "../redux/identifikasi/actions";
+import { create } from "../services/identifikasi";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import jwtDecode from "jwt-decode";
@@ -62,20 +63,15 @@ const Identifikasi = ({ user }) => {
     }
   };
 
-  const handleSimpan = () => {
+  const handleSimpan = async () => {
     if (
       form.hamaPenyakit !== "" &&
       form.arrayCfUser !== "" &&
       radio.index === allData[0]?.gejala.length - 1
     ) {
-      dispatch(createIdentifikasi(form));
-      if (Object.keys(error).length > 0) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Nampaknya terjadi kesalahan!",
-        });
-      } else {
+      const response = await create(form);
+      if (response?.data?.statusCode === 201) {
+        dispatch(createIdentifikasi(response?.data?.data));
         dispatch(setPage(page === total_page ? total_page : page + 1));
         if (page !== total_page) {
           handleRadio();
@@ -83,6 +79,14 @@ const Identifikasi = ({ user }) => {
         } else {
           router.push("/hasil-identifikasi");
         }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text:
+            `${response?.data?.message}` ||
+            "Nampaknya terjadi kesalahan pada perhitungan di API!",
+        });
       }
     } else {
       Swal.fire({

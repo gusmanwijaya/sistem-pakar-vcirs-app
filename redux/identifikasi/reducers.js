@@ -1,4 +1,4 @@
-import { SET_IDENTIFIKASI, ERROR_IDENTIFIKASI } from "./types";
+import { SET_IDENTIFIKASI } from "./types";
 
 const initialState = {
   user: "",
@@ -17,7 +17,6 @@ const initialState = {
   _tempCfCombine: [],
   cfCombine: 0,
   percentage: "",
-  error: {},
 };
 
 const reducers = (state = initialState, action) => {
@@ -41,12 +40,6 @@ const reducers = (state = initialState, action) => {
         _tempCfCombine: action._tempCfCombine,
         cfCombine: action.cfCombine,
         percentage: action.percentage,
-      };
-
-    case ERROR_IDENTIFIKASI:
-      return {
-        ...state,
-        error: action.error,
       };
 
     default:
