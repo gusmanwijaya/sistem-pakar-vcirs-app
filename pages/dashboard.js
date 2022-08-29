@@ -1,20 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import Content from "../components/Content";
 import jwtDecode from "jwt-decode";
-import { getAll } from "../services/dashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllHamaPenyakit } from "../redux/hama-penyakit/actions";
 import { useEffect } from "react";
 import Link from "next/link";
-import {
-  getForUser,
-  getAll as getForAdmin,
-} from "../services/hasil-identifikasi";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
-import { destroy } from "../services/identifikasi";
+import { getAll } from "../services/dashboard";
+import { getHistory, destroy } from "../services/identifikasi";
 
-const Dashboard = ({ data, users, historyForUser, historyForAdmin }) => {
+const Dashboard = ({ data, users, history }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
@@ -45,7 +41,7 @@ const Dashboard = ({ data, users, historyForUser, historyForAdmin }) => {
             title: "Sukses",
             text: `${response?.data?.message || "Berhasil menghapus data!"}`,
           });
-          router.push("/dashboard");
+          router.replace("/dashboard");
         } else {
           Swal.fire({
             icon: "error",
@@ -220,9 +216,7 @@ const Dashboard = ({ data, users, historyForUser, historyForAdmin }) => {
                   Hasil Diagnosa
                 </p>
                 <p className="text-lg font-semibold text-gray-700">
-                  {users?.role === "admin"
-                    ? historyForAdmin.length
-                    : historyForUser.length}
+                  {history?.length || 0}
                 </p>
               </div>
             </div>
@@ -258,135 +252,91 @@ const Dashboard = ({ data, users, historyForUser, historyForAdmin }) => {
         </div>
       </div>
 
-      <div
-        className={
-          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white"
-        }
-      >
-        <div className="rounded-t mb-0 px-4 py-3 border-0">
-          <div className="flex flex-wrap items-center">
-            <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-              <h3 className={"font-semibold text-lg text-gray-600"}>
-                History Identifikasi
-              </h3>
+      {history?.length > 0 && (
+        <div
+          className={
+            "relative flex flex-col min-w-0 break-words w-full mb-10 shadow-lg rounded bg-white"
+          }
+        >
+          <div className="rounded-t mb-0 px-4 py-3 border-0">
+            <div className="flex flex-wrap items-center">
+              <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+                <h3 className={"font-semibold text-lg text-gray-600"}>
+                  History Identifikasi
+                </h3>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="block w-full overflow-x-auto">
-          {/* Projects table */}
-          <table className="items-center w-full bg-transparent border-collapse">
-            <thead>
-              <tr>
-                <th
-                  className={
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                  }
-                >
-                  Tanggal
-                </th>
-                <th
-                  className={
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                  }
-                >
-                  Nama
-                </th>
-                <th
-                  className={
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                  }
-                >
-                  Persentase
-                </th>
-                <th
-                  className={
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                  }
-                >
-                  Hasil
-                </th>
-                <th
-                  className={
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                  }
-                ></th>
-              </tr>
-            </thead>
-            <tbody>
-              {users?.role === "pengguna" &&
-                historyForUser.length > 0 &&
-                historyForUser.map((value, index) => (
+          <div className="block w-full overflow-x-auto">
+            <table className="items-center w-full bg-transparent border-collapse">
+              <thead>
+                <tr>
+                  <th
+                    className={
+                      "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                    }
+                  >
+                    Tanggal
+                  </th>
+                  <th
+                    className={
+                      "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                    }
+                  >
+                    Nama
+                  </th>
+                  <th
+                    className={
+                      "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                    }
+                  >
+                    Persen
+                  </th>
+                  <th
+                    className={
+                      "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                    }
+                  >
+                    Hasil
+                  </th>
+                  <th
+                    className={
+                      "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                    }
+                  ></th>
+                </tr>
+              </thead>
+              <tbody>
+                {history?.map((value, index) => (
                   <tr key={index}>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs p-4">
                       {value?.tanggal}
                     </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs p-4">
                       {value?.user?.name}
                     </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {value?.percentage}
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs p-4">
+                      {value?.rule[value?.rule?.length - 1]?.persenCFKombinasi}
                     </td>
                     <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                       <img
                         src={
-                          value?.hamaPenyakit?.foto
-                            ? `${API_IMAGE}/${directory}/${value?.hamaPenyakit?.foto}`
+                          value?.hasilIdentifikasiHamaPenyakit?.foto
+                            ? `${API_IMAGE}/${directory}/${value?.hasilIdentifikasiHamaPenyakit?.foto}`
                             : "/img/empty.svg"
                         }
                         className="h-12 w-12 bg-white rounded-full border"
                         alt="..."
                       ></img>{" "}
                       <span className={"ml-3 font-bold text-blueGray-600"}>
-                        {value?.hamaPenyakit?.nama}
+                        {value?.hasilIdentifikasiHamaPenyakit?.nama}
                       </span>
                     </th>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center space-x-1">
                       <button
                         className="btn btn-ghost btn-xs capitalize"
                         onClick={() =>
-                          router.push(
-                            `/history-identifikasi/detail/${value?._id}`
-                          )
-                        }
-                      >
-                        Detail
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-
-              {users?.role === "admin" &&
-                historyForAdmin.length > 0 &&
-                historyForAdmin.map((value, index) => (
-                  <tr key={index}>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {value?.tanggal}
-                    </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {value?.user?.name}
-                    </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {value?.percentage}
-                    </td>
-                    <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                      <img
-                        src={
-                          value?.hamaPenyakit?.foto
-                            ? `${API_IMAGE}/${directory}/${value?.hamaPenyakit?.foto}`
-                            : "/img/empty.svg"
-                        }
-                        className="h-12 w-12 bg-white rounded-full border"
-                        alt="..."
-                      ></img>{" "}
-                      <span className={"ml-3 font-bold text-blueGray-600"}>
-                        {value?.hamaPenyakit?.nama}
-                      </span>
-                    </th>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center space-x-1">
-                      <button
-                        className="btn btn-ghost btn-xs capitalize"
-                        onClick={() =>
-                          router.push(
+                          router.replace(
                             `/history-identifikasi/detail/${value?._id}`
                           )
                         }
@@ -404,19 +354,11 @@ const Dashboard = ({ data, users, historyForUser, historyForAdmin }) => {
                     </td>
                   </tr>
                 ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
-        {/* <div className="flex flex-row justify-end px-4 py-4">
-          <Pagination
-            page={page}
-            handleNext={handleNext}
-            handlePrevious={handlePrevious}
-            disabledPrevious={page <= 1 ? true : false}
-            disabledNext={page === total_page ? true : false}
-          />
-        </div> */}
-      </div>
+      )}
 
       <div className="bg-white rounded-lg px-8 py-8">
         <div className="max-w-2xl mx-auto lg:max-w-none">
@@ -471,20 +413,14 @@ export async function getServerSideProps({ req }) {
 
   const users = jwtDecode(token);
 
-  const response = await getAll(
-    token,
-    users?.role === "admin" ? "" : users?._id
-  );
-
-  const responseHistoryIdentifikasiUser = await getForUser(token);
-  const responseHistoryIdentifikasiAdmin = await getForAdmin(token);
+  const response = await getAll(token);
+  const responseHistory = await getHistory(token);
 
   return {
     props: {
       data: response?.data?.data || {},
+      history: responseHistory?.data?.data || [],
       users,
-      historyForUser: responseHistoryIdentifikasiUser?.data?.data || [],
-      historyForAdmin: responseHistoryIdentifikasiAdmin?.data?.data || [],
     },
   };
 }

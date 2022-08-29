@@ -3,6 +3,21 @@ import CallApi from "../../configs/api";
 const ROOT_API = process.env.NEXT_PUBLIC_API;
 const API = "api/v1";
 
+export async function getGejala(token) {
+  const url = `${ROOT_API}/${API}/identifikasi/get-gejala`;
+  return CallApi({ url, method: "GET", serverToken: token });
+}
+
+export async function getHistory(token) {
+  const url = `${ROOT_API}/${API}/identifikasi/get`;
+  return CallApi({ url, method: "GET", serverToken: token });
+}
+
+export async function getOneHistory(id, token) {
+  const url = `${ROOT_API}/${API}/identifikasi/get-one/${id}`;
+  return CallApi({ url, method: "GET", serverToken: token });
+}
+
 export async function create(data) {
   const url = `${ROOT_API}/${API}/identifikasi/create`;
   return CallApi({ url, method: "POST", token: true, data });

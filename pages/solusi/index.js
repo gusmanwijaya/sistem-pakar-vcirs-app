@@ -63,53 +63,53 @@ const Solusi = () => {
 
   return (
     <Content title="Solusi">
-      <div
-        className={
-          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white"
-        }
-      >
-        <div className="rounded-t mb-0 px-4 py-3 border-0">
-          <div className="flex flex-row items-center">
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              onClick={() => router.push("/solusi/tambah")}
-            >
-              Tambah
-            </button>
+      {allData?.length > 0 ? (
+        <div
+          className={
+            "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white"
+          }
+        >
+          <div className="rounded-t mb-0 px-4 py-3 border-0">
+            <div className="flex flex-row items-center">
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={() => router.replace("/solusi/tambah")}
+              >
+                Tambah
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="block w-full overflow-x-auto">
-          {/* Projects table */}
-          <table className="items-center w-full bg-transparent border-collapse">
-            <thead>
-              <tr>
-                <th
-                  className={
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                  }
-                >
-                  Solusi
-                </th>
-                <th
-                  className={
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                  }
-                ></th>
-              </tr>
-            </thead>
-            <tbody>
-              {allData.length > 0 &&
-                allData.map((value, index) => (
+          <div className="block w-full overflow-x-auto">
+            {/* Projects table */}
+            <table className="items-center w-full bg-transparent border-collapse">
+              <thead>
+                <tr>
+                  <th
+                    className={
+                      "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                    }
+                  >
+                    Solusi
+                  </th>
+                  <th
+                    className={
+                      "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                    }
+                  ></th>
+                </tr>
+              </thead>
+              <tbody>
+                {allData.map((value, index) => (
                   <tr key={index}>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs max-w-4xl p-4">
                       {value?.deskripsi}
                     </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center space-x-1">
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs p-4 text-center space-x-1">
                       <button
                         className="btn btn-ghost btn-xs capitalize text-orange-500"
                         onClick={() =>
-                          router.push(`/solusi/ubah/${value?._id}`)
+                          router.replace(`/solusi/ubah/${value?._id}`)
                         }
                       >
                         Ubah
@@ -123,19 +123,38 @@ const Solusi = () => {
                     </td>
                   </tr>
                 ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
+          <div className="flex flex-row justify-end px-4 py-4">
+            <Pagination
+              page={page}
+              handleNext={handleNext}
+              handlePrevious={handlePrevious}
+              disabledPrevious={page <= 1 ? true : false}
+              disabledNext={page === total_page ? true : false}
+            />
+          </div>
         </div>
-        <div className="flex flex-row justify-end px-4 py-4">
-          <Pagination
-            page={page}
-            handleNext={handleNext}
-            handlePrevious={handlePrevious}
-            disabledPrevious={page <= 1 ? true : false}
-            disabledNext={page === total_page ? true : false}
+      ) : (
+        <div className="flex flex-col justify-center items-center">
+          <img
+            src="/img/empty.svg"
+            alt="Empty"
+            className="w-[40%] h-[40%] object-cover"
           />
+          <p className="font-bold text-sky-500 my-4">
+            Oops, nampaknya data masih kosong!
+          </p>
+          <button
+            onClick={() => router.replace("/solusi/tambah")}
+            type="button"
+            className="inline-block px-6 py-2 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in text-size-xs hover:scale-102 active:shadow-soft-xs tracking-tight-soft border-sky-500 text-sky-500 hover:border-sky-500 hover:bg-transparent hover:text-sky-500 hover:opacity-75 hover:shadow-none active:bg-sky-500 active:text-white active:hover:bg-transparent active:hover:text-sky-500"
+          >
+            Tambah
+          </button>
         </div>
-      </div>
+      )}
     </Content>
   );
 };

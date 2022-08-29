@@ -8,20 +8,42 @@ import { getForSelect as getForSelectGejala } from "../../services/gejala";
 import { useRouter } from "next/router";
 import jwtDecode from "jwt-decode";
 import Link from "next/link";
+import { MultiSelect } from "react-multi-select-component";
 
 const Tambah = ({ dataHamaPenyakit, dataGejala }) => {
   const router = useRouter();
 
+  let _tempForOptionsGejala = [];
+  dataGejala.forEach((element) => {
+    _tempForOptionsGejala.push({
+      label: `${element?.deskripsi}`,
+      value: element?._id,
+    });
+  });
+  const optionsGejala = _tempForOptionsGejala;
+
   const [form, setForm] = useState({
     hamaPenyakit: "",
-    gejala: "",
-    cfPakar: 0,
+    gejala: [],
   });
+
+  const [showValueGejala, setShowValueGejala] = useState([]);
+
+  const handleMultipleSelectGejala = (data) => {
+    setShowValueGejala(data);
+    let _tempGejala = [];
+    data.map((value, index) => {
+      _tempGejala.push(value?.value);
+      if (_tempGejala.length > 0) {
+        setForm({ ...form, gejala: JSON.stringify(_tempGejala) });
+      }
+    });
+  };
 
   const handleTambah = async () => {
     const response = await create(form);
     if (response?.data?.statusCode === 201) {
-      router.push("/basis-pengetahuan");
+      router.replace("/basis-pengetahuan");
       Swal.fire({
         icon: "success",
         title: "Sukses",
@@ -84,44 +106,18 @@ const Tambah = ({ dataHamaPenyakit, dataGejala }) => {
               ))}
           </select>
         </div>
-        <div className="relative z-0 mb-6 w-full group">
+        <div className="relative mb-6 w-full group">
           <label
             htmlFor="gejala"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
             Gejala
           </label>
-          <select
-            name="gejala"
-            className="select select-bordered w-full"
-            onChange={(event) =>
-              setForm({ ...form, gejala: event.target.value })
-            }
-          >
-            <option value=""></option>
-            {dataGejala.length > 0 &&
-              dataGejala.map((value, index) => (
-                <option key={index} value={value?._id}>
-                  {value?.deskripsi}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="relative z-0 mb-6 w-full group">
-          <label
-            htmlFor="cfPakar"
-            className="block text-sm font-medium text-gray-400 mb-2"
-          >
-            CF Pakar
-          </label>
-          <input
-            type="number"
-            min={0}
-            className="input input-bordered w-full"
-            name="cfPakar"
-            onChange={(event) =>
-              setForm({ ...form, cfPakar: event.target.value })
-            }
+          <MultiSelect
+            options={optionsGejala}
+            value={showValueGejala}
+            onChange={(event) => handleMultipleSelectGejala(event)}
+            labelledBy="Pilih gejala"
           />
         </div>
         <button

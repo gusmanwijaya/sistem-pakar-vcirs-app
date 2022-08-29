@@ -1,8 +1,5 @@
 import { GET_ALL_SOLUSI, ERROR_SOLUSI, SET_PAGE } from "./types";
 import { getAll } from "../../services/solusi";
-import debounce from "debounce-promise";
-
-const debouncedGetAll = debounce(getAll, 100);
 
 const setPage = (page) => {
   return {
@@ -33,7 +30,7 @@ const fetchAllSolusi = () => {
       limit: getState().solusiReducers?.limit || 10,
     };
 
-    const response = await debouncedGetAll(params?.page, params?.limit);
+    const response = await getAll(params?.page, params?.limit);
     if (response?.data?.statusCode === 200) {
       dispatch(
         setGetAllSolusi(response?.data?.data, response?.data?.total_page)

@@ -10,31 +10,80 @@ import { getForSelect as getForSelectHamaPenyakit } from "../../../services/hama
 import { getForSelect as getForSelectGejala } from "../../../services/gejala";
 import jwtDecode from "jwt-decode";
 import Link from "next/link";
+import { MultiSelect } from "react-multi-select-component";
 
 const Ubah = ({ oneData, params, dataHamaPenyakit, dataGejala }) => {
   const router = useRouter();
 
+  let _tempForOptionsGejala = [];
+  dataGejala.forEach((element) => {
+    _tempForOptionsGejala.push({
+      label: `${element?.deskripsi}`,
+      value: element?._id,
+    });
+  });
+  const optionsGejala = _tempForOptionsGejala;
+
   const [form, setForm] = useState({
     hamaPenyakit: "",
-    gejala: "",
-    cfPakar: 0,
+    gejala: [],
   });
+
+  const [showValueGejala, setShowValueGejala] = useState([]);
 
   useEffect(() => {
     if (Object.keys(oneData).length > 0) {
+      let _tempIdGejala = [];
+
+      let _idGejala = [];
+      oneData.gejala.forEach((_idGej) => {
+        _idGejala.push(_idGej?._id);
+      });
+
+      if (_idGejala.length > 0) {
+        let updateForShowValueGejala = [];
+        optionsGejala.forEach((element) => {
+          _idGejala.forEach((result) => {
+            if (element?.value === result) {
+              updateForShowValueGejala.push({
+                label: element?.label,
+                value: element?.value,
+              });
+            }
+          });
+        });
+
+        if (updateForShowValueGejala.length > 0) {
+          setShowValueGejala(updateForShowValueGejala);
+          updateForShowValueGejala.forEach((idGej) => {
+            _tempIdGejala.push(idGej?.value);
+          });
+        }
+      }
+
       setForm({
         ...form,
-        hamaPenyakit: oneData?.hamaPenyakit?._id || "",
-        gejala: oneData?.gejala?._id || "",
-        cfPakar: oneData?.cfPakar || 0,
+        hamaPenyakit: oneData?.hamaPenyakit || "",
+        gejala: _tempIdGejala,
       });
     }
   }, []);
 
+  const handleMultipleSelectGejala = (data) => {
+    setShowValueGejala(data);
+    let _tempGejala = [];
+    data.map((value, index) => {
+      _tempGejala.push(value?.value);
+      if (_tempGejala.length > 0) {
+        setForm({ ...form, gejala: JSON.stringify(_tempGejala) });
+      }
+    });
+  };
+
   const handleUbah = async () => {
     const response = await update(params?.id, form);
     if (response?.data?.statusCode === 200) {
-      router.push("/basis-pengetahuan");
+      router.replace("/basis-pengetahuan");
       Swal.fire({
         icon: "success",
         title: "Sukses",
@@ -103,51 +152,18 @@ const Ubah = ({ oneData, params, dataHamaPenyakit, dataGejala }) => {
               )}
           </select>
         </div>
-        <div className="relative z-0 mb-6 w-full group">
+        <div className="relative mb-6 w-full group">
           <label
             htmlFor="gejala"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
             Gejala
           </label>
-          <select
-            name="gejala"
-            className="select select-bordered w-full"
-            onChange={(event) =>
-              setForm({ ...form, gejala: event.target.value })
-            }
-          >
-            <option value=""></option>
-            {dataGejala.length > 0 &&
-              dataGejala.map((value, index) =>
-                value?._id === oneData?.gejala?._id ? (
-                  <option key={index} value={value?._id} selected>
-                    {value?.deskripsi}
-                  </option>
-                ) : (
-                  <option key={index} value={value?._id}>
-                    {value?.deskripsi}
-                  </option>
-                )
-              )}
-          </select>
-        </div>
-        <div className="relative z-0 mb-6 w-full group">
-          <label
-            htmlFor="cfPakar"
-            className="block text-sm font-medium text-gray-400 mb-2"
-          >
-            CF Pakar
-          </label>
-          <input
-            type="number"
-            min={0}
-            className="input input-bordered w-full"
-            name="cfPakar"
-            onChange={(event) =>
-              setForm({ ...form, cfPakar: event.target.value })
-            }
-            value={form.cfPakar}
+          <MultiSelect
+            options={optionsGejala}
+            value={showValueGejala}
+            onChange={(event) => handleMultipleSelectGejala(event)}
+            labelledBy="Pilih gejala"
           />
         </div>
         <button

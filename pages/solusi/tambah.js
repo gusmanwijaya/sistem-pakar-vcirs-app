@@ -17,7 +17,7 @@ const Tambah = () => {
   const handleTambah = async () => {
     const response = await create(form);
     if (response?.data?.statusCode === 201) {
-      router.push("/solusi");
+      router.replace("/solusi");
       Swal.fire({
         icon: "success",
         title: "Sukses",

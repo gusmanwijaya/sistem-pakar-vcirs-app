@@ -17,9 +17,9 @@ const Ubah = ({ oneData, params }) => {
   const [form, setForm] = useState({
     kode: "",
     deskripsi: "",
+    cfPakar: 0,
     foto: "",
     imagePreview: "",
-    pertanyaan: "",
   });
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const Ubah = ({ oneData, params }) => {
         ...form,
         kode: oneData?.kode || "",
         deskripsi: oneData?.deskripsi || "",
-        pertanyaan: oneData?.pertanyaan || "",
+        cfPakar: oneData?.cfPakar || 0,
         imagePreview:
           oneData?.foto && oneData?.foto !== ""
             ? `${API_IMAGE}/${directory}/${oneData?.foto}`
@@ -59,12 +59,12 @@ const Ubah = ({ oneData, params }) => {
     let formData = new FormData();
     formData.append("kode", form.kode);
     formData.append("deskripsi", form.deskripsi);
+    formData.append("cfPakar", form.cfPakar);
     formData.append("foto", form.foto);
-    formData.append("pertanyaan", form.pertanyaan);
 
     const response = await update(params?.id, formData);
     if (response?.data?.statusCode === 200) {
-      router.push("/gejala");
+      router.replace("/gejala");
       Swal.fire({
         icon: "success",
         title: "Sukses",
@@ -140,20 +140,21 @@ const Ubah = ({ oneData, params }) => {
         </div>
         <div className="relative z-0 mb-6 w-full group">
           <label
-            htmlFor="pertanyaan"
+            htmlFor="cfPakar"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
-            Pertanyaan
+            CF Pakar
           </label>
           <input
-            type="text"
-            name="pertanyaan"
+            type="number"
+            min={1}
+            name="cfPakar"
             className="input input-bordered w-full"
             required
             onChange={(event) =>
-              setForm({ ...form, pertanyaan: event.target.value })
+              setForm({ ...form, cfPakar: event.target.value })
             }
-            value={form?.pertanyaan}
+            value={form?.cfPakar}
           />
         </div>
         <div className="relative mb-6 w-full group space-y-3">

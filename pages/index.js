@@ -18,7 +18,7 @@ export default function Login() {
     const response = await login(form);
     if (response?.data?.statusCode === 200) {
       Cookies.set("token", response?.data?.data?.token);
-      router.push("/dashboard");
+      router.replace("/dashboard");
       Swal.fire({
         icon: "success",
         title: "Sukses",

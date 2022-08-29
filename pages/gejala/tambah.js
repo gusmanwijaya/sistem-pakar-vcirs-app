@@ -13,9 +13,9 @@ const Tambah = () => {
   const [form, setForm] = useState({
     kode: "",
     deskripsi: "",
+    cfPakar: 0,
     foto: "",
     imagePreview: "",
-    pertanyaan: "",
   });
 
   const handleUploadPhoto = (event) => {
@@ -40,12 +40,12 @@ const Tambah = () => {
     let formData = new FormData();
     formData.append("kode", form.kode);
     formData.append("deskripsi", form.deskripsi);
+    formData.append("cfPakar", form.cfPakar);
     formData.append("foto", form.foto);
-    formData.append("pertanyaan", form.pertanyaan);
 
     const response = await create(formData);
     if (response?.data?.statusCode === 201) {
-      router.push("/gejala");
+      router.replace("/gejala");
       Swal.fire({
         icon: "success",
         title: "Sukses",
@@ -119,18 +119,19 @@ const Tambah = () => {
         </div>
         <div className="relative z-0 mb-6 w-full group">
           <label
-            htmlFor="pertanyaan"
+            htmlFor="cfPakar"
             className="block text-sm font-medium text-gray-400 mb-2"
           >
-            Pertanyaan
+            CF Pakar
           </label>
           <input
-            type="text"
-            name="pertanyaan"
+            type="number"
+            min={1}
+            name="cfPakar"
             className="input input-bordered w-full"
             required
             onChange={(event) =>
-              setForm({ ...form, pertanyaan: event.target.value })
+              setForm({ ...form, cfPakar: event.target.value })
             }
           />
         </div>

@@ -4,27 +4,13 @@ import Link from "next/link";
 import { MultiSelect } from "react-multi-select-component";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { getForSelect as getForSelectGejala } from "../../services/gejala";
 import { getForSelect as getForSelectSolusi } from "../../services/solusi";
 import { create } from "../../services/hama-penyakit";
 import { useRouter } from "next/router";
 import jwtDecode from "jwt-decode";
 
-const Tambah = ({ dataGejala, dataSolusi }) => {
+const Tambah = ({ dataSolusi }) => {
   const router = useRouter();
-
-  let _tempForOptionsGejala = [];
-  dataGejala.forEach((element) => {
-    const noKode = element?.kode.split("G")[1];
-    _tempForOptionsGejala.push({
-      noKode: parseInt(noKode),
-      label: `${element?.kode} - ${element?.deskripsi}`,
-      value: element?._id,
-    });
-  });
-  const optionsGejala = _tempForOptionsGejala.sort((a, b) => {
-    return a.noKode - b.noKode;
-  });
 
   let _tempForOptionsSolusi = [];
   dataSolusi.forEach((element) => {
@@ -39,24 +25,11 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
     kode: "",
     nama: "",
     deskripsi: "",
-    gejala: [],
     solusi: [],
     foto: "",
     imagePreview: "",
   });
-  const [showValueGejala, setShowValueGejala] = useState([]);
   const [showValueSolusi, setShowValueSolusi] = useState([]);
-
-  const handleMultipleSelectGejala = (data) => {
-    setShowValueGejala(data);
-    let _tempGejala = [];
-    data.map((value, index) => {
-      _tempGejala.push(value?.value);
-      if (_tempGejala.length > 0) {
-        setForm({ ...form, gejala: _tempGejala });
-      }
-    });
-  };
 
   const handleMultipleSelectSolusi = (data) => {
     setShowValueSolusi(data);
@@ -93,12 +66,11 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
     formData.append("nama", form.nama);
     formData.append("deskripsi", form.deskripsi);
     formData.append("foto", form.foto);
-    formData.append("gejala", JSON.stringify(form.gejala));
     formData.append("solusi", JSON.stringify(form.solusi));
 
     const response = await create(formData);
     if (response?.data?.statusCode === 201) {
-      router.push("/hama-penyakit");
+      router.replace("/hama-penyakit");
       Swal.fire({
         icon: "success",
         title: "Sukses",
@@ -181,20 +153,6 @@ const Tambah = ({ dataGejala, dataSolusi }) => {
             onChange={(event) =>
               setForm({ ...form, deskripsi: event.target.value })
             }
-          />
-        </div>
-        <div className="relative mb-6 w-full group">
-          <label
-            htmlFor="gejala"
-            className="block text-sm font-medium text-gray-400 mb-2"
-          >
-            Gejala
-          </label>
-          <MultiSelect
-            options={optionsGejala}
-            value={showValueGejala}
-            onChange={(event) => handleMultipleSelectGejala(event)}
-            labelledBy="Pilih gejala"
           />
         </div>
         <div className="relative mb-6 w-full group">
@@ -288,12 +246,10 @@ export async function getServerSideProps({ req }) {
     };
   }
 
-  const responseGejala = await getForSelectGejala(token);
   const responseSolusi = await getForSelectSolusi(token);
 
   return {
     props: {
-      dataGejala: responseGejala?.data?.data || [],
       dataSolusi: responseSolusi?.data?.data || [],
     },
   };

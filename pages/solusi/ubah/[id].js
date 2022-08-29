@@ -28,7 +28,7 @@ const Ubah = ({ oneData, params }) => {
   const handleUbah = async () => {
     const response = await update(params?.id, form);
     if (response?.data?.statusCode === 200) {
-      router.push("/solusi");
+      router.replace("/solusi");
       Swal.fire({
         icon: "success",
         title: "Sukses",

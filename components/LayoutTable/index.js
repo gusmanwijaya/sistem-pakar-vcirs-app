@@ -26,7 +26,7 @@ const LayoutTable = ({
           {urlTambah && (
             <button
               onClick={() => {
-                router.push(urlTambah);
+                router.replace(urlTambah);
               }}
               className="btn btn-xs btn-outline btn-info capitalize"
             >
@@ -67,7 +67,7 @@ const LayoutTable = ({
                           {urlDetail && (
                             <button
                               onClick={() => {
-                                router.push(`${urlDetail}/${value?._id}`);
+                                router.replace(`${urlDetail}/${value?._id}`);
                               }}
                               className="btn btn-ghost btn-xs capitalize"
                             >
@@ -77,7 +77,7 @@ const LayoutTable = ({
                           {urlUbah && (
                             <button
                               onClick={() => {
-                                router.push(`${urlUbah}/${value?._id}`);
+                                router.replace(`${urlUbah}/${value?._id}`);
                               }}
                               className="btn btn-ghost btn-xs capitalize text-orange-500"
                             >

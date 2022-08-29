@@ -4,7 +4,6 @@ import Content from "../../../components/Content";
 import { MultiSelect } from "react-multi-select-component";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { getForSelect as getForSelectGejala } from "../../../services/gejala";
 import { getForSelect as getForSelectSolusi } from "../../../services/solusi";
 import { update, getOne } from "../../../services/hama-penyakit";
 import { useRouter } from "next/router";
@@ -12,23 +11,10 @@ import { useEffect } from "react";
 import jwtDecode from "jwt-decode";
 import Link from "next/link";
 
-const Ubah = ({ dataGejala, dataSolusi, oneData, params }) => {
+const Ubah = ({ dataSolusi, oneData, params }) => {
   const router = useRouter();
   const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
   const directory = "hama-penyakit";
-
-  let _tempForOptionsGejala = [];
-  dataGejala.forEach((element) => {
-    const noKode = element?.kode.split("G")[1];
-    _tempForOptionsGejala.push({
-      noKode: parseInt(noKode),
-      label: `${element?.kode} - ${element?.deskripsi}`,
-      value: element?._id,
-    });
-  });
-  const optionsGejala = _tempForOptionsGejala.sort((a, b) => {
-    return a.noKode - b.noKode;
-  });
 
   let _tempForOptionsSolusi = [];
   dataSolusi.forEach((element) => {
@@ -43,46 +29,15 @@ const Ubah = ({ dataGejala, dataSolusi, oneData, params }) => {
     kode: "",
     nama: "",
     deskripsi: "",
-    gejala: [],
     solusi: [],
     foto: "",
     imagePreview: "",
   });
-  const [showValueGejala, setShowValueGejala] = useState([]);
   const [showValueSolusi, setShowValueSolusi] = useState([]);
 
   useEffect(() => {
     if (Object.keys(oneData).length > 0) {
-      let _tempIdGej = [];
       let _tempIdSol = [];
-
-      let _idGejala = [];
-      oneData.gejala.forEach((_idGej) => {
-        _idGejala.push(_idGej?._id);
-      });
-
-      if (_idGejala.length > 0) {
-        let updateForShowValueGejala = [];
-        optionsGejala.forEach((element) => {
-          _idGejala.forEach((result) => {
-            if (element?.value === result) {
-              updateForShowValueGejala.push({
-                noKode: element?.noKode,
-                label: element?.label,
-                value: element?.value,
-              });
-            }
-          });
-        });
-
-        if (updateForShowValueGejala.length > 0) {
-          setShowValueGejala(updateForShowValueGejala);
-
-          updateForShowValueGejala.forEach((idGej) => {
-            _tempIdGej.push(idGej?.value);
-          });
-        }
-      }
 
       let _idSolusi = [];
       oneData.solusi.forEach((_idSol) => {
@@ -115,7 +70,6 @@ const Ubah = ({ dataGejala, dataSolusi, oneData, params }) => {
         kode: oneData?.kode || "",
         nama: oneData?.nama || "",
         deskripsi: oneData?.deskripsi || "",
-        gejala: _tempIdGej,
         solusi: _tempIdSol,
         imagePreview:
           oneData?.foto && oneData?.foto !== ""
@@ -124,17 +78,6 @@ const Ubah = ({ dataGejala, dataSolusi, oneData, params }) => {
       });
     }
   }, []);
-
-  const handleMultipleSelectGejala = (data) => {
-    setShowValueGejala(data);
-    let _tempGejala = [];
-    data.map((value, index) => {
-      _tempGejala.push(value?.value);
-      if (_tempGejala.length > 0) {
-        setForm({ ...form, gejala: _tempGejala });
-      }
-    });
-  };
 
   const handleMultipleSelectSolusi = (data) => {
     setShowValueSolusi(data);
@@ -171,12 +114,11 @@ const Ubah = ({ dataGejala, dataSolusi, oneData, params }) => {
     formData.append("nama", form.nama);
     formData.append("deskripsi", form.deskripsi);
     formData.append("foto", form.foto);
-    formData.append("gejala", JSON.stringify(form.gejala));
     formData.append("solusi", JSON.stringify(form.solusi));
 
     const response = await update(params?.id, formData);
     if (response?.data?.statusCode === 200) {
-      router.push("/hama-penyakit");
+      router.replace("/hama-penyakit");
       Swal.fire({
         icon: "success",
         title: "Sukses",
@@ -262,20 +204,6 @@ const Ubah = ({ dataGejala, dataSolusi, oneData, params }) => {
               setForm({ ...form, deskripsi: event.target.value })
             }
             value={form?.deskripsi}
-          />
-        </div>
-        <div className="relative mb-6 w-full group">
-          <label
-            htmlFor="gejala"
-            className="block text-sm font-medium text-gray-400 mb-2"
-          >
-            Gejala
-          </label>
-          <MultiSelect
-            options={optionsGejala}
-            value={showValueGejala}
-            onChange={(event) => handleMultipleSelectGejala(event)}
-            labelledBy="Pilih gejala"
           />
         </div>
         <div className="relative mb-6 w-full group">
@@ -369,14 +297,12 @@ export async function getServerSideProps({ req, params }) {
     };
   }
 
-  const responseGejala = await getForSelectGejala(token);
   const responseSolusi = await getForSelectSolusi(token);
 
   const responseOneData = await getOne(params?.id, token);
 
   return {
     props: {
-      dataGejala: responseGejala?.data?.data || [],
       dataSolusi: responseSolusi?.data?.data || [],
       oneData: responseOneData?.data?.data || {},
       params,

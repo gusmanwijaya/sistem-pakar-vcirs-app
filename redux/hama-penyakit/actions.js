@@ -5,9 +5,6 @@ import {
   SET_PAGE,
 } from "./types";
 import { getAll } from "../../services/hama-penyakit";
-import debounce from "debounce-promise";
-
-const debouncedGetAll = debounce(getAll, 100);
 
 const setKeyword = (keyword) => {
   return {
@@ -46,11 +43,7 @@ const fetchAllHamaPenyakit = () => {
       limit: getState().hamaPenyakitReducers?.limit || 10,
     };
 
-    const response = await debouncedGetAll(
-      params?.keyword,
-      params?.page,
-      params?.limit
-    );
+    const response = await getAll(params?.keyword, params?.page, params?.limit);
     if (response?.data?.statusCode === 200) {
       dispatch(
         setGetAllHamaPenyakit(response?.data?.data, response?.data?.total_page)

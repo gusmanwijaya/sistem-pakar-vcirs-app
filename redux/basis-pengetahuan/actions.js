@@ -4,9 +4,6 @@ import {
   SET_PAGE,
 } from "./types";
 import { getAll } from "../../services/basis-pengetahuan";
-import debounce from "debounce-promise";
-
-const debouncedGetAll = debounce(getAll, 100);
 
 const setPage = (page) => {
   return {
@@ -37,7 +34,7 @@ const fetchAllBasisPengetahuan = () => {
       limit: getState().basisPengetahuanReducers?.limit || 10,
     };
 
-    const response = await debouncedGetAll(params?.page, params?.limit);
+    const response = await getAll(params?.page, params?.limit);
     if (response?.data?.statusCode === 200) {
       dispatch(
         setGetAllBasisPengetahuan(

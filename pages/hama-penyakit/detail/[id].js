@@ -68,22 +68,6 @@ const Detail = ({ oneData }) => {
               </dd>
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Gejala</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                <div className="flex flex-col space-y-4">
-                  {oneData.gejala.length > 0 &&
-                    oneData.gejala.map((value, index) => (
-                      <div key={index}>
-                        <div className="font-medium">Kode: {value?.kode}</div>
-                        <div className="text-sm opacity-50">
-                          {value?.deskripsi}
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </dd>
-            </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Solusi</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <div className="flex flex-col space-y-4">

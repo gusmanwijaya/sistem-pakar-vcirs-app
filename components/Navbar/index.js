@@ -32,9 +32,11 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = () => {
+    Cookies.remove("process");
     Cookies.remove("token");
+    sessionStorage.clear();
     localStorage.clear();
-    router.push("/");
+    router.replace("/");
   };
 
   return (

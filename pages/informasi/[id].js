@@ -59,41 +59,15 @@ const Informasi = ({ oneData }) => {
       <section className="h-full w-full px-8 py-8 mb-12" data-aos="fade-up">
         <div className="flex flex-col">
           <h2 className="md:text-4xl text-3xl font-semibold mb-10 tracking-tight text-center">
-            Gejala
-          </h2>
-          <ul className="flex flex-col px-56 space-y-8">
-            {oneData?.gejala.length > 0 &&
-              oneData?.gejala.map((value, index) => (
-                <li
-                  key={index}
-                  className="flex flex-row items-center space-x-8"
-                >
-                  <div className="px-3 py-3 bg-gray-900 rounded-xl">
-                    <span className="text-xl text-gray-300">{index + 1}</span>
-                  </div>
-                  <div className="text-slate-500 text-sm text-justify">
-                    {value?.deskripsi}
-                  </div>
-                </li>
-              ))}
-          </ul>
-        </div>
-      </section>
-      <section className="h-full w-full px-8 py-8 mb-12" data-aos="fade-up">
-        <div className="flex flex-col">
-          <h2 className="md:text-4xl text-3xl font-semibold mb-10 tracking-tight text-center">
             Solusi
           </h2>
           <ul className="flex flex-col px-32 space-y-8">
-            {oneData?.solusi.length > 0 &&
-              oneData?.solusi.map((value, index) => (
+            {oneData?.solusi?.length > 0 &&
+              oneData?.solusi?.map((value, index) => (
                 <li
                   key={index}
                   className="flex flex-row items-center space-x-8"
                 >
-                  <div className="px-3 py-3 bg-gray-900 rounded-xl">
-                    <span className="text-xl text-gray-300">{index + 1}</span>
-                  </div>
                   <div className="text-slate-500 text-sm text-justify">
                     {value?.deskripsi}
                   </div>
@@ -106,7 +80,7 @@ const Informasi = ({ oneData }) => {
         <button
           type="button"
           className="btn btn-ghost capitalize"
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.replace("/dashboard")}
         >
           Kembali
         </button>

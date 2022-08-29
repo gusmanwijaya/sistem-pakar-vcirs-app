@@ -1,8 +1,5 @@
 import { GET_ALL_GEJALA, ERROR_GEJALA, SET_PAGE } from "./types";
 import { getAll } from "../../services/gejala";
-import debounce from "debounce-promise";
-
-const debouncedGetAll = debounce(getAll, 100);
 
 const setPage = (page) => {
   return {
@@ -33,7 +30,7 @@ const fetchAllGejala = () => {
       limit: getState().gejalaReducers?.limit || 10,
     };
 
-    const response = await debouncedGetAll(params?.page, params?.limit);
+    const response = await getAll(params?.page, params?.limit);
     if (response?.data?.statusCode === 200) {
       dispatch(
         setGetAllGejala(response?.data?.data, response?.data?.total_page)
