@@ -36,10 +36,20 @@ const Detail = ({ oneData }) => {
             Hasil identifikasi dengan metode VCIRS
           </h3>
         </div>
-        <div className="mt-2 mb-4 text-sm text-blue-900">
+        <div className="mt-2 mb-8 text-sm text-blue-900">
           Menurut hasil analisa, Anda terserang :{" "}
           <span className="font-bold uppercase">
-            {oneData?.hasilIdentifikasiHamaPenyakit?.nama}
+            {oneData?.hasilIdentifikasiHamaPenyakit?.length > 1
+              ? `${
+                  oneData?.hasilIdentifikasiHamaPenyakit[
+                    oneData?.hasilIdentifikasiHamaPenyakit?.length - 1
+                  ]?.nama
+                } & ${
+                  oneData?.hasilIdentifikasiHamaPenyakit[
+                    oneData?.hasilIdentifikasiHamaPenyakit?.length - 2
+                  ]?.nama
+                }`
+              : oneData?.hasilIdentifikasiHamaPenyakit[0]?.nama}
           </span>{" "}
           <br />
           Dengan nilai analisa sebesar :{" "}
@@ -49,32 +59,44 @@ const Detail = ({ oneData }) => {
           </span>
         </div>
         <div className="mt-2 mb-4 text-sm text-blue-900">
-          {oneData?.hasilIdentifikasiHamaPenyakit?.foto && (
-            <div>
-              Berikut gambar dari penyakit{" "}
-              {oneData?.hasilIdentifikasiHamaPenyakit?.nama}{" "}
-              <img
-                src={`${API_IMAGE}/${directory}/${oneData?.hasilIdentifikasiHamaPenyakit?.foto}`}
-                alt="Detail Penyakit"
-                className="object-cover my-3 rounded-xl w-44 h-w-44"
-              />
-            </div>
-          )}
-          {oneData?.hasilIdentifikasiHamaPenyakit?.solusi?.length > 0 && (
-            <div>
-              Solusinya adalah sebagai berikut : <br /> <br />
-              {oneData?.hasilIdentifikasiHamaPenyakit?.solusi?.map(
-                (value, index) => (
-                  <div key={index}>
+          {oneData?.hasilIdentifikasiHamaPenyakit?.map(
+            (valueHasilIdentifikasi) => (
+              <>
+                {valueHasilIdentifikasi?.foto && (
+                  <div>
+                    Berikut gambar dari{" "}
                     <span className="font-bold uppercase">
-                      {index + 1}. {value?.deskripsi}
-                      <br />
-                      <br />
-                    </span>
+                      {valueHasilIdentifikasi?.nama}
+                    </span>{" "}
+                    <img
+                      src={`${API_IMAGE}/${directory}/${valueHasilIdentifikasi?.foto}`}
+                      alt="Detail Penyakit"
+                      className="object-cover my-3 rounded-xl w-44 h-w-44"
+                    />
                   </div>
-                )
-              )}
-            </div>
+                )}
+
+                {valueHasilIdentifikasi?.solusi?.length > 0 && (
+                  <div>
+                    Solusi dari{" "}
+                    <span className="font-bold uppercase">
+                      {valueHasilIdentifikasi?.nama}
+                    </span>{" "}
+                    adalah sebagai berikut : <br /> <br />
+                    {valueHasilIdentifikasi?.solusi?.map((value, index) => (
+                      <div key={index}>
+                        <span className="font-bold uppercase">
+                          {index + 1}. {value?.deskripsi}
+                          <br />
+                          <br />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <br />
+              </>
+            )
           )}
         </div>
         <div className="flex justify-between">
@@ -321,10 +343,10 @@ const Detail = ({ oneData }) => {
               <tbody>
                 {oneData?.basisPengetahuan?.map((value, index) => (
                   <tr key={index} className="bg-white border-b">
-                    <td className="py-4 px-6 font-medium text-gray-900">
+                    <td className="py-4 px-6 font-medium text-gray-900 align-top">
                       {index + 1}
                     </td>
-                    <td className="py-4 px-6 font-medium text-gray-900 max-w-sm">
+                    <td className="py-4 px-6 font-medium text-gray-900 max-w-sm align-top">
                       {value?.hamaPenyakit?.nama}
                     </td>
                     <td className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">

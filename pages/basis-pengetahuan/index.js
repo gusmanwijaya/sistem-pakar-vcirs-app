@@ -112,7 +112,7 @@ const BasisPengetahuan = () => {
               <tbody>
                 {allData.map((value, index) => (
                   <tr key={index}>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs p-4">
+                    <td className="border-t-0 px-6 align-top border-l-0 border-r-0 text-xs p-4">
                       {value?.hamaPenyakit?.nama}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs max-w-3xl p-4">

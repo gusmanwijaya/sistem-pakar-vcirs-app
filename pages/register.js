@@ -95,10 +95,10 @@ export default function Register() {
         </div>
 
         <div
-          className="col-span-8 font-bold flex flex-col justify-center items-center px-14"
+          className="col-span-8 font-bold flex flex-col justify-center items-center px-14 bg-contain"
           style={{
             background: `url(
-              "https://images.unsplash.com/photo-1561986810-4f3ba2f46ceb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8Y29mZmVlJTIwcGxhbnRzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60"
+              "/img/aphids.jpg"
             )`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",

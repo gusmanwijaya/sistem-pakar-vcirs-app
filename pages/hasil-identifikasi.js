@@ -13,7 +13,7 @@ const HasilIdentifikasi = () => {
     gejalaYangDipilih: [],
     basisPengetahuan: [],
     rule: [],
-    hasilIdentifikasiHamaPenyakit: {},
+    hasilIdentifikasiHamaPenyakit: [],
   });
   const [toggleHasilPerhitungan, setToggleHasilPerhitungan] = useState(false);
   const API_IMAGE = process.env.NEXT_PUBLIC_API_IMAGE;
@@ -60,10 +60,20 @@ const HasilIdentifikasi = () => {
             Hasil identifikasi dengan metode VCIRS
           </h3>
         </div>
-        <div className="mt-2 mb-4 text-sm text-blue-900">
+        <div className="mt-2 mb-8 text-sm text-blue-900">
           Menurut hasil analisa, Anda terserang :{" "}
           <span className="font-bold uppercase">
-            {payload?.hasilIdentifikasiHamaPenyakit?.nama}
+            {payload?.hasilIdentifikasiHamaPenyakit?.length > 1
+              ? `${
+                  payload?.hasilIdentifikasiHamaPenyakit[
+                    payload?.hasilIdentifikasiHamaPenyakit?.length - 1
+                  ]?.nama
+                } & ${
+                  payload?.hasilIdentifikasiHamaPenyakit[
+                    payload?.hasilIdentifikasiHamaPenyakit?.length - 2
+                  ]?.nama
+                }`
+              : payload?.hasilIdentifikasiHamaPenyakit[0]?.nama}
           </span>{" "}
           <br />
           Dengan nilai analisa sebesar :{" "}
@@ -73,32 +83,45 @@ const HasilIdentifikasi = () => {
           </span>
         </div>
         <div className="mt-2 mb-4 text-sm text-blue-900">
-          {payload?.hasilIdentifikasiHamaPenyakit?.foto && (
-            <div>
-              Berikut gambar dari penyakit{" "}
-              {payload?.hasilIdentifikasiHamaPenyakit?.nama}{" "}
-              <img
-                src={`${API_IMAGE}/${directory}/${payload?.hasilIdentifikasiHamaPenyakit?.foto}`}
-                alt="Detail Penyakit"
-                className="object-cover my-3 rounded-xl w-44 h-w-44"
-              />
-            </div>
-          )}
-          {payload?.hasilIdentifikasiHamaPenyakit?.solusi?.length > 0 && (
-            <div>
-              Solusinya adalah sebagai berikut : <br /> <br />
-              {payload?.hasilIdentifikasiHamaPenyakit?.solusi?.map(
-                (value, index) => (
-                  <div key={index}>
+          {payload?.hasilIdentifikasiHamaPenyakit?.map(
+            (valueHasilIdentifikasi) => (
+              <>
+                {valueHasilIdentifikasi?.foto && (
+                  <div>
+                    Berikut gambar dari{" "}
                     <span className="font-bold uppercase">
-                      {index + 1}. {value?.deskripsi}
-                      <br />
-                      <br />
-                    </span>
+                      {valueHasilIdentifikasi?.nama}
+                    </span>{" "}
+                    <img
+                      src={`${API_IMAGE}/${directory}/${valueHasilIdentifikasi?.foto}`}
+                      alt="Detail Penyakit"
+                      className="object-cover my-3 rounded-xl w-44 h-w-44"
+                    />
                   </div>
-                )
-              )}
-            </div>
+                )}
+
+                {valueHasilIdentifikasi?.solusi?.length > 0 && (
+                  <div>
+                    Solusi dari{" "}
+                    <span className="font-bold uppercase">
+                      {valueHasilIdentifikasi?.nama}
+                    </span>{" "}
+                    adalah sebagai berikut : <br /> <br />
+                    {valueHasilIdentifikasi?.solusi?.map((value, index) => (
+                      <div key={index}>
+                        <span className="font-bold uppercase">
+                          {index + 1}. {value?.deskripsi}
+                          <br />
+                          <br />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <br />
+              </>
+            )
           )}
         </div>
         <div className="flex justify-between">
@@ -345,10 +368,10 @@ const HasilIdentifikasi = () => {
               <tbody>
                 {payload?.basisPengetahuan?.map((value, index) => (
                   <tr key={index} className="bg-white border-b">
-                    <td className="py-4 px-6 font-medium text-gray-900">
+                    <td className="py-4 px-6 font-medium text-gray-900 align-top">
                       {index + 1}
                     </td>
-                    <td className="py-4 px-6 font-medium text-gray-900 max-w-sm">
+                    <td className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap align-top">
                       {value?.hamaPenyakit?.nama}
                     </td>
                     <td className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
