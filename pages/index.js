@@ -94,8 +94,9 @@ export default function Login() {
           }}
         >
           <span className="text-center text-slate-100 text-3xl">
-            Sistem Pakar Untuk Mengidentifikasi Hama dan Penyakit Pada Tanaman
-            Kopi Robusta
+            Sistem Pakar Identifikasi Hama dan Penyakit Pada Tanaman Kopi
+            Robusta Menggunakan Metode Variabel Centered Intellegent Rule
+            System(VCIRS)
           </span>
         </div>
       </div>

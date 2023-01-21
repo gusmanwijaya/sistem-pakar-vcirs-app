@@ -62,7 +62,7 @@ const HasilIdentifikasi = () => {
         </div>
         <div className="mt-2 mb-8 text-sm text-blue-900">
           Menurut hasil analisa, Anda terserang :{" "}
-          <span className="font-bold uppercase">
+          <span className="font-bold capitalize">
             {payload?.hasilIdentifikasiHamaPenyakit?.length > 1
               ? `${
                   payload?.hasilIdentifikasiHamaPenyakit[
@@ -77,7 +77,7 @@ const HasilIdentifikasi = () => {
           </span>{" "}
           <br />
           Dengan nilai analisa sebesar :{" "}
-          <span className="font-bold uppercase">
+          <span className="font-bold capitalize">
             {payload?.rule?.length > 0 &&
               payload?.rule[payload?.rule?.length - 1]?.persenCFKombinasi}
           </span>
@@ -89,7 +89,7 @@ const HasilIdentifikasi = () => {
                 {valueHasilIdentifikasi?.foto && (
                   <div>
                     Berikut gambar dari{" "}
-                    <span className="font-bold uppercase">
+                    <span className="font-bold capitalize">
                       {valueHasilIdentifikasi?.nama}
                     </span>{" "}
                     <img
@@ -103,13 +103,13 @@ const HasilIdentifikasi = () => {
                 {valueHasilIdentifikasi?.solusi?.length > 0 && (
                   <div>
                     Solusi dari{" "}
-                    <span className="font-bold uppercase">
+                    <span className="font-bold capitalize">
                       {valueHasilIdentifikasi?.nama}
                     </span>{" "}
                     adalah sebagai berikut : <br /> <br />
                     {valueHasilIdentifikasi?.solusi?.map((value, index) => (
                       <div key={index}>
-                        <span className="font-bold uppercase">
+                        <span className="font-bold capitalize">
                           {index + 1}. {value?.deskripsi}
                           <br />
                           <br />

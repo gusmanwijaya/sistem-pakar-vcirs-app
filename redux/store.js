@@ -6,6 +6,7 @@ import thunkMiddleware from "redux-thunk";
 import hamaPenyakitReducers from "./hama-penyakit/reducers";
 import gejalaReducers from "./gejala/reducers";
 import solusiReducers from "./solusi/reducers";
+import identifikasiReducers from "./identifikasi/reducers";
 import basisPengetahuanReducers from "./basis-pengetahuan/reducers";
 
 let store;
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   gejalaReducers,
   solusiReducers,
   basisPengetahuanReducers,
+  identifikasiReducers,
 });
 
 function initStore(initialState) {

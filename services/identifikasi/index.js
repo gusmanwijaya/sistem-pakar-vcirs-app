@@ -3,9 +3,9 @@ import CallApi from "../../configs/api";
 const ROOT_API = process.env.NEXT_PUBLIC_API;
 const API = "api/v1";
 
-export async function getGejala(token) {
-  const url = `${ROOT_API}/${API}/identifikasi/get-gejala`;
-  return CallApi({ url, method: "GET", serverToken: token });
+export async function getGejala(page, limit) {
+  const url = `${ROOT_API}/${API}/identifikasi/get-gejala?page=${page}&limit=${limit}`;
+  return CallApi({ url, method: "GET", token: true });
 }
 
 export async function getHistory(token) {

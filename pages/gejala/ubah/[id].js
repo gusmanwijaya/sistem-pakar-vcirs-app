@@ -56,26 +56,34 @@ const Ubah = ({ oneData, params }) => {
   };
 
   const handleUbah = async () => {
-    let formData = new FormData();
-    formData.append("kode", form.kode);
-    formData.append("deskripsi", form.deskripsi);
-    formData.append("cfPakar", form.cfPakar);
-    formData.append("foto", form.foto);
-
-    const response = await update(params?.id, formData);
-    if (response?.data?.statusCode === 200) {
-      router.replace("/gejala");
-      Swal.fire({
-        icon: "success",
-        title: "Sukses",
-        text: `${response?.data?.message || "Berhasil mengubah data!"}`,
-      });
-    } else {
+    if (form?.cfPakar > 1) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: `${response?.data?.message || "Nampaknya terjadi kesalahan!"}`,
+        text: "CF Pakar diisi antara 0-1",
       });
+    } else {
+      let formData = new FormData();
+      formData.append("kode", form.kode);
+      formData.append("deskripsi", form.deskripsi);
+      formData.append("cfPakar", form.cfPakar);
+      formData.append("foto", form.foto);
+
+      const response = await update(params?.id, formData);
+      if (response?.data?.statusCode === 200) {
+        router.replace("/gejala");
+        Swal.fire({
+          icon: "success",
+          title: "Sukses",
+          text: `${response?.data?.message || "Berhasil mengubah data!"}`,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${response?.data?.message || "Nampaknya terjadi kesalahan!"}`,
+        });
+      }
     }
   };
 
@@ -147,7 +155,8 @@ const Ubah = ({ oneData, params }) => {
           </label>
           <input
             type="number"
-            min={1}
+            min={0}
+            max={1}
             name="cfPakar"
             className="input input-bordered w-full"
             required
@@ -156,6 +165,9 @@ const Ubah = ({ oneData, params }) => {
             }
             value={form?.cfPakar}
           />
+          <p className="text-xs text-blue-500 pt-2">
+            *CF Pakar diisi antara 0-1
+          </p>
         </div>
         <div className="relative mb-6 w-full group space-y-3">
           <label className="block text-sm font-medium text-gray-400 mb-2">

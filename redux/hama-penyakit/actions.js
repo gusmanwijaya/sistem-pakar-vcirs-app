@@ -35,12 +35,14 @@ const setErrorHamaPenyakit = (error) => {
   };
 };
 
-const fetchAllHamaPenyakit = () => {
+const fetchAllHamaPenyakit = (isDashboard = false) => {
   return async (dispatch, getState) => {
     const params = {
       keyword: getState().hamaPenyakitReducers.keyword || "",
       page: getState().hamaPenyakitReducers?.page || 1,
-      limit: getState().hamaPenyakitReducers?.limit || 10,
+      limit: isDashboard
+        ? 9999999
+        : getState().hamaPenyakitReducers?.limit || 10,
     };
 
     const response = await getAll(params?.keyword, params?.page, params?.limit);

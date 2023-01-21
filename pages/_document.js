@@ -34,7 +34,7 @@ class MyDocument extends Document {
             rel="stylesheet"
           />
         </Head>
-        <body className="font-poppins bg-slate-50 text-gray-900 min-h-screen">
+        <body className="scroll-smooth font-poppins bg-slate-50 text-gray-900 min-h-screen">
           <Main />
           <NextScript />
         </body>

@@ -112,6 +112,15 @@ export default function Navbar() {
               </button>
             </Link>
           </li>
+
+          <li>
+            <Link href="/ubah-password">
+              <button className="btn btn-active btn-ghost capitalize">
+                Ubah Password
+              </button>
+            </Link>
+          </li>
+
           <li>
             <button
               onClick={handleLogout}
