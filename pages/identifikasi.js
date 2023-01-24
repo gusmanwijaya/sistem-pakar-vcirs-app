@@ -51,29 +51,28 @@ const Identifikasi = () => {
 
   const handleIdentifikasi = async () => {
     if (checkboxValue?.length > 0) {
-      console.log(checkboxValue);
-      // const form = {
-      //   idSelectedGejala: JSON.stringify(checkboxValue),
-      // };
-      // const response = await create(form);
-      // if (response?.data?.statusCode === 201) {
-      //   Cookies.set("process", true);
-      //   localStorage.setItem("process", JSON.stringify(response?.data?.data));
-      //   router.replace("/hasil-identifikasi");
-      //   Swal.fire({
-      //     icon: "success",
-      //     title: "Sukses",
-      //     text: `${
-      //       response?.data?.message || "Berhasil melakukan identifikasi!"
-      //     }`,
-      //   });
-      // } else {
-      //   Swal.fire({
-      //     icon: "error",
-      //     title: "Oops...",
-      //     text: `${response?.data?.message || "Nampaknya terjadi kesalahan!"}`,
-      //   });
-      // }
+      const form = {
+        idSelectedGejala: JSON.stringify(checkboxValue),
+      };
+      const response = await create(form);
+      if (response?.data?.statusCode === 201) {
+        Cookies.set("process", true);
+        localStorage.setItem("process", JSON.stringify(response?.data?.data));
+        router.replace("/hasil-identifikasi");
+        Swal.fire({
+          icon: "success",
+          title: "Sukses",
+          text: `${
+            response?.data?.message || "Berhasil melakukan identifikasi!"
+          }`,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${response?.data?.message || "Nampaknya terjadi kesalahan!"}`,
+        });
+      }
     } else {
       Swal.fire({
         icon: "error",
