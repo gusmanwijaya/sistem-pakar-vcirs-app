@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Content from "../components/Content";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { fetchAllPertanyaan, setPage } from "../redux/identifikasi/actions";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
+import { create } from "../services/identifikasi";
 
 const Identifikasi = () => {
   const router = useRouter();
@@ -31,6 +32,12 @@ const Identifikasi = () => {
   useEffect(() => {
     dispatch(fetchAllPertanyaan());
   }, [dispatch, page]);
+
+  useEffect(() => {
+    if (page !== 1) {
+      dispatch(setPage(1));
+    }
+  }, []);
 
   const [checkboxValue, setCheckboxValue] = useState([]);
 
